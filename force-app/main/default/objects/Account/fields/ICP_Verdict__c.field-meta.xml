@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ICP_Verdict__c</fullName>
+    <description>A text field indicating the final decision or classification regarding an account&apos;s Ideal Customer Profile (ICP) fit</description>
+    <externalId>false</externalId>
+    <label>ICP Verdict</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

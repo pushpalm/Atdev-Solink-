@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contains_New_Integration__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Set by quote configurator. True if any line item has a Data Integration value of &quot;Net New Integration&quot; and a non-blank value for New Integration Name. Mapped to Ironclad to render the appropriate fields in the launch form.</description>
+    <label>Contains New Integration</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

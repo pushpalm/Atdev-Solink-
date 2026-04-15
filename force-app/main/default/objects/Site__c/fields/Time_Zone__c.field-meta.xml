@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Time_Zone__c</fullName>
+    <label>Time Zone</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>America/Honolulu</fullName>
+                <default>false</default>
+                <label>(GMT-10:00) Hawaii Standard Time</label>
+            </value>
+            <value>
+                <fullName>America/Anchorage</fullName>
+                <default>false</default>
+                <label>(GMT-09:00) Alaska Standard Time</label>
+            </value>
+            <value>
+                <fullName>America/Los_Angeles</fullName>
+                <default>false</default>
+                <label>(GMT-08:00) Pacific Standard Time</label>
+            </value>
+            <value>
+                <fullName>America/Denver</fullName>
+                <default>false</default>
+                <label>(GMT-07:00) Mountain Standard Time</label>
+            </value>
+            <value>
+                <fullName>America/Phoenix</fullName>
+                <default>false</default>
+                <label>(GMT-07:00) Mountain Standard Time (No DST)</label>
+            </value>
+            <value>
+                <fullName>America/Chicago</fullName>
+                <default>false</default>
+                <label>(GMT-06:00) Central Standard Time</label>
+            </value>
+            <value>
+                <fullName>America/New_York</fullName>
+                <default>false</default>
+                <label>(GMT-05:00) Eastern Standard Time</label>
+            </value>
+            <value>
+                <fullName>America/Halifax</fullName>
+                <default>false</default>
+                <label>(GMT-04:00) Atlantic Standard Time</label>
+            </value>
+            <value>
+                <fullName>America/St_Johns</fullName>
+                <default>false</default>
+                <label>(GMT-03:30) Newfoundland Standard Time</label>
+            </value>
+            <value>
+                <fullName>Europe/London</fullName>
+                <default>false</default>
+                <label>(GMT+00:00) Greenwich Mean Time</label>
+            </value>
+            <value>
+                <fullName>Asia/Taipei</fullName>
+                <default>false</default>
+                <label>(GMT+08:00) Taipei Standard Time</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

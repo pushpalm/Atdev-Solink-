@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+  <types>
+    <members>CheckExternalUserAction</members>
+    <members>OpportunitySiteCameraDataController</members>
+    <members>OpportunitySiteCameraDataControllerTest</members>
+    <members>OpportunitySiteCameraUpdateAction</members>
+    <members>SiteDetailsEmailSendAction</members>
+    <name>ApexClass</name>
+  </types>
+  <types>
+        <members>Opportunity</members>
+    <members>Opportunity_Site__c</members>
+    <members>Site__c</members>
+    <members>Contact</members>
+    <members>Account</members>
+    <name>CustomObject</name>
+  </types>
+  <types>
+    <members>Enable_Customer_Community_User</members>
+    <members>Launch_Request_Site_Details_Email</members>
+    <members>Manage_Opportunity_Site_Camera_Data</members>
+    <members>Update_Prospecting_Opportunity_Camera_Details</members>
+    <name>Flow</name>
+  </types>
+  <types>
+    <members>Account-Customer Portal Account Layout</members>
+    <members>Contact-Customer Portal Contact Layout</members>
+    <members>Site__c-Site Layout</members>
+    <name>Layout</name>
+  </types>
+  <types>
+    <members>cameraDataModeSelector</members>
+    <members>flowEmailAuthorLauncher</members>
+    <members>manageOpportunitySiteCameraDataWrapper</members>
+    <members>opportunitySiteTemplateDownload</members>
+    <name>LightningComponentBundle</name>
+  </types>
+  <types>
+        <members>ASolinkCustomerPortalUser</members>
+        <members>SolinkCustomerPortalUser</members>
+        <name>Profile</name>
+    </types>
+     <types>
+        <members>Opportunity.Collect_Site_Data</members>
+        <name>QuickAction</name>
+    </types>
+      <types>
+        <members>Opportunity_Record_Page</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>DownloadTemplateNextStepMessage</members>
+        <members>ManualDataEntryRecommendation</members>
+        <members>SolinkCustomerPortalUserProfileName</members>
+        <name>CustomLabel</name>
+    </types>
+     <types>
+        <members>Solink_Email_Templates/Experience_Cloud_New_Member_Welcome_Email_Solink_HTML</members>
+        <members>Solink_Email_Templates/Request_Site_Details</members>
+        <name>EmailTemplate</name>
+    </types>
+  <version>66.0</version>
+</Package>

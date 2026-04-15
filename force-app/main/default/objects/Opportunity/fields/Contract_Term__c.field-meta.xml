@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contract_Term__c</fullName>
+    <label>Contract Term</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Month-to-Month</fullName>
+                <default>false</default>
+                <label>Month-to-Month</label>
+            </value>
+            <value>
+                <fullName>1 Year</fullName>
+                <default>false</default>
+                <label>1 Year</label>
+            </value>
+            <value>
+                <fullName>3 Year</fullName>
+                <default>false</default>
+                <label>3 Year</label>
+            </value>
+            <value>
+                <fullName>5 Year</fullName>
+                <default>false</default>
+                <label>5 Year</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

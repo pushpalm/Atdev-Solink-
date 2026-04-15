@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>partner_deal_registration_readiness__c</fullName>
+    <label>Partner Deal Registration Readiness</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Lead Identified - No Contact Made)</fullName>
+                <default>false</default>
+                <label>Lead Identified - No Contact Made)</label>
+            </value>
+            <value>
+                <fullName>Lead Identified - Contact Made</fullName>
+                <default>false</default>
+                <label>Lead Identified - Contact Made</label>
+            </value>
+            <value>
+                <fullName>Discovery Stage - Understanding Prospect Needs</fullName>
+                <default>false</default>
+                <label>Discovery Stage - Understanding Prospect Needs</label>
+            </value>
+            <value>
+                <fullName>Ready to Schedule Demo</fullName>
+                <default>false</default>
+                <label>Ready to Schedule Demo</label>
+            </value>
+            <value>
+                <fullName>Pricing Shared</fullName>
+                <default>false</default>
+                <label>Pricing Shared</label>
+            </value>
+            <value>
+                <fullName>Verbal Agreement</fullName>
+                <default>false</default>
+                <label>Verbal Agreement</label>
+            </value>
+            <value>
+                <fullName>Negotiation in Progress</fullName>
+                <default>false</default>
+                <label>Negotiation in Progress</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>HTML version of the Experience Cloud New Member Welcome Email with Solink branding and logo.</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Experience Cloud: New Member Welcome Email - Solink HTML</name>
+    <style>none</style>
+    <subject>Action Required: Welcome to {!Community_Name}</subject>
+    <textOnly>Action Required: Welcome to {!Community_Name}
+
+Dear {!Receiving_User.FirstName},
+
+Welcome to your secure customer portal! This platform allows you to manage your site details and gives you real time access to all deployment updates including tracking information.
+
+Your Login Details
+
+Username: {!Receiving_User.Username}
+
+To get started, go to {!Community_Url}
+
+If you have any questions or need assistance accessing the portal, please reach out to our support team at (support email)
+
+Best regards,
+The Solink Operations Team
+{!Organization.Name}</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

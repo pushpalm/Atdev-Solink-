@@ -1,0 +1,15 @@
+<template>
+    <template if:true={hasResolvedId}>
+        <lightning-flow
+            flow-api-name={flowApiName}
+            flow-input-variables={inputVariables}
+            onstatuschange={handleFlowStatusChange}
+        ></lightning-flow>
+    </template>
+
+    <template if:false={hasResolvedId}>
+        <div class="slds-box slds-theme_error">
+            Unable to determine the Opportunity Id from the page context or URL.
+        </div>
+    </template>
+</template>

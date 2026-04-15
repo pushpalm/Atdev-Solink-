@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Site_Survey_Status__c</fullName>
+    <label>Site Survey Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>More Information Required</fullName>
+                <default>false</default>
+                <label>More Information Required</label>
+            </value>
+            <value>
+                <fullName>Sent to Scheduling</fullName>
+                <default>false</default>
+                <label>Sent to Scheduling</label>
+            </value>
+            <value>
+                <fullName>Scheduling In Progress</fullName>
+                <default>false</default>
+                <label>Scheduling In Progress</label>
+            </value>
+            <value>
+                <fullName>Scheduled</fullName>
+                <default>false</default>
+                <label>Scheduled</label>
+            </value>
+            <value>
+                <fullName>In Progress</fullName>
+                <default>false</default>
+                <label>In Progress</label>
+            </value>
+            <value>
+                <fullName>Pending Results Submission</fullName>
+                <default>false</default>
+                <label>Pending Results Submission</label>
+            </value>
+            <value>
+                <fullName>Validating Results</fullName>
+                <default>false</default>
+                <label>Validating Results</label>
+            </value>
+            <value>
+                <fullName>Pending Signature of a New Quote</fullName>
+                <default>false</default>
+                <label>Pending Signature of a New Quote</label>
+            </value>
+            <value>
+                <fullName>Ready for Deployment</fullName>
+                <default>false</default>
+                <label>Ready for Deployment</label>
+            </value>
+            <value>
+                <fullName>On Hold</fullName>
+                <default>false</default>
+                <label>On Hold</label>
+            </value>
+            <value>
+                <fullName>Closed</fullName>
+                <default>false</default>
+                <label>Closed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

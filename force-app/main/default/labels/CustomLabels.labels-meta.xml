@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>DownloadTemplateNextStepMessage</fullName>
+        <categories>Opportunity Site Camera Data</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Instructions shown after downloading template</shortDescription>
+        <value>Thanks for downloading the CSV template. Go ahead and fill in the necessary data, but please leave the “Opportunity Site Id” column exactly as it is.
+When you&apos;re finished, come back to this form and choose Upload to continue.</value>
+    </labels>
+    <labels>
+        <fullName>ManualDataEntryRecommendation</fullName>
+        <categories>Portal User</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Manual data entry recommendation for mode selector</shortDescription>
+        <value>Manual Data Entry is recommended for &lt;=10 sites.</value>
+    </labels>
+    <labels>
+        <fullName>SolinkCustomerPortalUserProfileName</fullName>
+        <categories>Portal User</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Portal profile name</shortDescription>
+        <value>SolinkCustomerPortalUser</value>
+    </labels>
+</CustomLabels>

@@ -1,0 +1,98 @@
+:host {
+    display: block;
+    --selector-brand: var(--lwc-brandAccessible, #0176d3);
+    --selector-border: var(--lwc-colorBorder, #d8dde6);
+    --selector-text: var(--lwc-colorTextDefault, #181818);
+    --selector-text-muted: var(--lwc-colorTextLabel, #5c5c5c);
+    --selector-surface: var(--lwc-colorBackgroundAlt, #ffffff);
+    --selector-surface-selected: var(--lwc-colorBackgroundAlt, #ffffff);
+}
+
+.selector {
+    display: block;
+}
+
+.selector__group {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+}
+
+.selector__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.selector__legend {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--selector-text);
+}
+
+.selector__recommendation {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--selector-brand);
+    border: 1px solid var(--selector-brand);
+    border-radius: 9999px;
+    background: #eef4ff;
+    padding: 0.2rem 0.6rem;
+    line-height: 1.3;
+}
+
+.selector__options {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.selector__option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid var(--selector-border);
+    border-radius: 0.75rem;
+    background: var(--selector-surface);
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.selector__option:hover {
+    border-color: var(--selector-brand);
+    box-shadow: 0 0 0 1px var(--selector-brand);
+}
+
+.selector__option--selected {
+    border-color: var(--selector-brand);
+    background: var(--selector-surface-selected);
+    box-shadow: 0 0 0 1px var(--selector-brand);
+}
+
+.selector__input {
+    margin: 0.15rem 0 0;
+    accent-color: var(--selector-brand);
+    flex: 0 0 auto;
+}
+
+.selector__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.selector__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--selector-text);
+}
+
+.selector__description {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--selector-text-muted);
+}

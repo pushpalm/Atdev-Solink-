@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Customer-facing Solink email requesting site details such as address and related notes.</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Request Site Details</name>
+    <style>none</style>
+    <subject>Please confirm your site details for Solink</subject>
+    <textOnly>Please Confirm Your Site Details
+
+Hello {!Contact.Name},
+
+To help us move forward with your Solink setup, please provide the site details for your location(s) by clicking the link below.
+
+Provide Site Details
+
+If you have any questions or are unable to access the link, please reach out to your AE and they be able to will help.
+
+Thank you,
+Solink Team</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

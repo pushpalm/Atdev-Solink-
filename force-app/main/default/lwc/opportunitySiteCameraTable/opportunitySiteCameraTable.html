@@ -1,0 +1,554 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 04-16-2026
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={showNoSitesMessage}>
+        <div class="slds-text-body_regular">
+            No sites are associated to this opportunity.
+        </div>
+    </template>
+
+    <template if:true={hasRows}>
+        <div class="table-shell">
+        <div class="slds-box slds-theme_default slds-m-bottom_medium table-shell__summary">
+            <div class="slds-text-title_caps slds-m-bottom_x-small table-shell__summary-label">Account</div>
+            <div class="slds-text-heading_small table-shell__summary-name">{accountName}</div>
+            <div class="slds-text-body_small slds-text-color_weak slds-m-top_x-small table-shell__summary-count">
+                {siteCount} site(s) to update
+            </div>
+        </div>
+        
+        <template if:true={displayedErrorMessage}>
+            <div class="slds-text-color_error slds-m-bottom_small table-shell__error-banner">{displayedErrorMessage}</div>
+        </template>
+
+        <div class="site-list">
+            <template for:each={rows} for:item="row">
+                <section key={row.sectionKey} class="slds-box slds-theme_default slds-m-bottom_medium site-card">
+                    <div class="site-card__accent"></div>
+                    <div class="slds-grid slds-wrap slds-grid_vertical-align-start slds-gutters_small slds-m-bottom_medium site-card__header">
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3 site-card__header-block">
+                            <div class="slds-text-title_caps slds-m-bottom_x-small site-card__eyebrow">Site</div>
+                            <div class="slds-text-heading_small site-card__title">{row.siteName}</div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3 site-card__header-block">
+                            <div class="slds-text-title_caps slds-m-bottom_x-small site-card__eyebrow">Site Address</div>
+                            <div class="slds-text-body_regular site-card__address">{row.siteAddress}</div>
+                        </div>
+                    </div>
+
+                    <div class="site-card__section site-card__section--bordered slds-m-bottom_medium">
+                        <div class="site-card__section-header slds-m-bottom_small">
+                            <div class="slds-text-heading_small"><strong>Address Details</strong></div>
+                            <span class="site-card__required-indicator">Required</span>
+                        </div>
+                        <div class="slds-grid slds-wrap slds-gutters_small">
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 site-card__header-block">
+                                <div class="slds-text-title_caps slds-m-bottom_x-small site-card__eyebrow">Site Address </div>
+                                <div class="slds-grid slds-wrap slds-gutters_x-small">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-input type="text" label={row.fieldLabels.siteAddressStreet} data-row-id={row.opportunitySiteId} data-field="siteAddressStreet" value={row.siteAddressStreet} onchange={handleFieldChange}></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <lightning-input type="text" label={row.fieldLabels.siteAddressCity} data-row-id={row.opportunitySiteId} data-field="siteAddressCity" value={row.siteAddressCity} onchange={handleFieldChange}></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <template if:true={row.hasSiteAddressStateCodeOptions}>
+                                            <lightning-combobox label={row.fieldLabels.siteAddressStateCode} data-row-id={row.opportunitySiteId} data-field="siteAddressStateCode" value={row.siteAddressStateCode} options={row.siteAddressStateCodeOptions} onchange={handleFieldChange}></lightning-combobox>
+                                        </template>
+                                        <template if:false={row.hasSiteAddressStateCodeOptions}>
+                                            <lightning-input type="text" label={row.fieldLabels.siteAddressStateCode} data-row-id={row.opportunitySiteId} data-field="siteAddressStateCode" value={row.siteAddressStateCode} onchange={handleFieldChange}></lightning-input>
+                                        </template>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <lightning-input type="text" label={row.fieldLabels.siteAddressPostalCode} data-row-id={row.opportunitySiteId} data-field="siteAddressPostalCode" value={row.siteAddressPostalCode} onchange={handleFieldChange}></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <template if:true={row.hasSiteAddressCountryCodeOptions}>
+                                            <lightning-combobox label={row.fieldLabels.siteAddressCountryCode} data-row-id={row.opportunitySiteId} data-field="siteAddressCountryCode" value={row.siteAddressCountryCode} options={row.siteAddressCountryCodeOptions} onchange={handleFieldChange}></lightning-combobox>
+                                        </template>
+                                        <template if:false={row.hasSiteAddressCountryCodeOptions}>
+                                            <lightning-input type="text" label={row.fieldLabels.siteAddressCountryCode} data-row-id={row.opportunitySiteId} data-field="siteAddressCountryCode" value={row.siteAddressCountryCode} onchange={handleFieldChange}></lightning-input>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 site-card__header-block">
+                            <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-bottom_x-small">
+                                <div class="slds-text-title_caps site-card__eyebrow">Shipping Address</div>
+                                <lightning-input type="checkbox" label={row.fieldLabels.sameAsSiteAddress} data-row-id={row.opportunitySiteId} data-field="sameAsSiteAddress" checked={row.sameAsSiteAddress} onchange={handleFieldChange}></lightning-input>
+                            </div>
+                                <div class="slds-grid slds-wrap slds-gutters_x-small">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-input type="text" label={row.fieldLabels.shippingAddressStreet} data-row-id={row.opportunitySiteId} data-field="shippingAddressStreet" value={row.shippingAddressStreet} onchange={handleFieldChange}></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <lightning-input type="text" label={row.fieldLabels.shippingAddressCity} data-row-id={row.opportunitySiteId} data-field="shippingAddressCity" value={row.shippingAddressCity} onchange={handleFieldChange}></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <lightning-input type="text" label={row.fieldLabels.shippingAddressStateCode} data-row-id={row.opportunitySiteId} data-field="shippingAddressStateCode" value={row.shippingAddressStateCode} onchange={handleFieldChange}></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <lightning-input type="text" label={row.fieldLabels.shippingAddressPostalCode} data-row-id={row.opportunitySiteId} data-field="shippingAddressPostalCode" value={row.shippingAddressPostalCode} onchange={handleFieldChange}></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <lightning-input type="text" label={row.fieldLabels.shippingAddressCountryCode} data-row-id={row.opportunitySiteId} data-field="shippingAddressCountryCode" value={row.shippingAddressCountryCode} onchange={handleFieldChange}></lightning-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="site-card__section slds-m-bottom_medium">
+                    <div class="site-card__section-header slds-m-bottom_x-small">
+                        <div class="slds-text-title_caps site-card__section-title">Site Details</div>
+                        <span class="site-card__required-indicator">Required</span>
+                    </div>
+                    <div class="slds-grid slds-wrap slds-gutters_small">
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                            <lightning-input
+                                type="number"
+                                label={row.fieldLabels.totalCamera}
+                                min="0"
+                                step="1"
+                                data-row-id={row.opportunitySiteId}
+                                data-field="totalCamera"
+                                value={row.totalCamera}
+                                onchange={handleFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                            <template if:true={row.hasPointOfSaleSystemOptions}>
+                                <lightning-combobox
+                                    label={row.fieldLabels.pointOfSaleSystem}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="pointOfSaleSystem"
+                                    value={row.pointOfSaleSystem}
+                                    options={row.pointOfSaleSystemOptions}
+                                    onchange={handleFieldChange}
+                                ></lightning-combobox>
+                            </template>
+                            <template if:false={row.hasPointOfSaleSystemOptions}>
+                                <lightning-input
+                                    type="text"
+                                    label={row.fieldLabels.pointOfSaleSystem}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="pointOfSaleSystem"
+                                    value={row.pointOfSaleSystem}
+                                    onchange={handleFieldChange}
+                                ></lightning-input>
+                            </template>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                            <lightning-input
+                                type="date"
+                                label={row.fieldLabels.siteOpenDate}
+                                data-row-id={row.opportunitySiteId}
+                                data-field="siteOpenDate"
+                                value={row.siteOpenDate}
+                                onchange={handleFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                            <lightning-input
+                                type="text"
+                                label={row.fieldLabels.cameraMakeCustom}
+                                data-row-id={row.opportunitySiteId}
+                                data-field="cameraMakeCustom"
+                                value={row.cameraMakeCustom}
+                                onchange={handleFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                            <lightning-input
+                                type="text"
+                                label={row.fieldLabels.cameraModelCustom}
+                                data-row-id={row.opportunitySiteId}
+                                data-field="cameraModelCustom"
+                                value={row.cameraModelCustom}
+                                onchange={handleFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                            <lightning-input
+                                type="text"
+                                label={row.fieldLabels.dataIntegrationsRequiredOther}
+                                data-row-id={row.opportunitySiteId}
+                                data-field="dataIntegrationsRequiredOther"
+                                value={row.dataIntegrationsRequiredOther}
+                                onchange={handleFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                            <template if:true={row.hasWhoIsInstallingOptions}>
+                                <lightning-combobox
+                                    label={row.fieldLabels.whoIsInstalling}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="whoIsInstalling"
+                                    value={row.whoIsInstalling}
+                                    options={row.whoIsInstallingOptions}
+                                    onchange={handleFieldChange}
+                                ></lightning-combobox>
+                            </template>
+                            <template if:false={row.hasWhoIsInstallingOptions}>
+                                <lightning-input
+                                    type="text"
+                                    label={row.fieldLabels.whoIsInstalling}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="whoIsInstalling"
+                                    value={row.whoIsInstalling}
+                                    onchange={handleFieldChange}
+                                ></lightning-input>
+                            </template>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="site-card__section site-card__section--bordered slds-m-bottom_medium">
+                        <div class="site-card__section-header slds-m-bottom_x-small">
+                            <div class="slds-text-title_caps site-card__section-title">Site Contacts</div>
+                            <span class="site-card__required-indicator">Required</span>
+                        </div>
+                        <div class="slds-m-bottom_small">
+                            <lightning-button
+                                label="New Contact"
+                                variant="neutral"
+                                data-row-id={row.opportunitySiteId}
+                                onclick={openCreateContactModal}
+                            ></lightning-button>
+                        </div>
+                        <div class="slds-grid slds-wrap slds-gutters_small slds-m-bottom_medium">
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                                <div class="slds-grid slds-wrap slds-gutters_small">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-record-picker
+                                            label={row.fieldLabels.shippingContact}
+                                            object-api-name="Contact"
+                                            filter={row.contactLookupFilter}
+                                            data-row-id={row.opportunitySiteId}
+                                            data-field="shippingContactId"
+                                            value={row.shippingContactId}
+                                            onchange={handleFieldChange}
+                                        ></lightning-record-picker>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-record-picker
+                                            label={row.fieldLabels.dataContact}
+                                            object-api-name="Contact"
+                                            filter={row.contactLookupFilter}
+                                            data-row-id={row.opportunitySiteId}
+                                            data-field="dataContactId"
+                                            value={row.dataContactId}
+                                            onchange={handleFieldChange}
+                                        ></lightning-record-picker>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-record-picker
+                                            label={row.fieldLabels.accountAdministratorContact}
+                                            object-api-name="Contact"
+                                            filter={row.contactLookupFilter}
+                                            data-row-id={row.opportunitySiteId}
+                                            data-field="accountAdministratorContactId"
+                                            value={row.accountAdministratorContactId}
+                                            onchange={handleFieldChange}
+                                        ></lightning-record-picker>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                                <div class="slds-grid slds-wrap slds-gutters_small">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-record-picker
+                                            label={row.fieldLabels.installContact}
+                                            object-api-name="Contact"
+                                            filter={row.contactLookupFilter}
+                                            data-row-id={row.opportunitySiteId}
+                                            data-field="installContactId"
+                                            value={row.installContactId}
+                                            onchange={handleFieldChange}
+                                        ></lightning-record-picker>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-record-picker
+                                            label={row.fieldLabels.billingContact}
+                                            object-api-name="Contact"
+                                            filter={row.contactLookupFilter}
+                                            data-row-id={row.opportunitySiteId}
+                                            data-field="billingContactId"
+                                            value={row.billingContactId}
+                                            onchange={handleFieldChange}
+                                        ></lightning-record-picker>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-textarea
+                                            label={row.fieldLabels.additionalBillingNotes}
+                                            data-row-id={row.opportunitySiteId}
+                                            data-field="additionalBillingNotes"
+                                            value={row.additionalBillingNotes}
+                                            onchange={handleFieldChange}
+                                        ></lightning-textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="site-card__section site-card__section--bordered slds-m-bottom_medium">
+                        <div class="site-card__section-header slds-m-bottom_x-small">
+                            <div class="slds-text-title_caps site-card__section-title">NVR / DVR Details</div>
+                            <span class="site-card__required-indicator">Required when POE is selected</span>
+                        </div>
+                        <div class="slds-grid slds-wrap slds-gutters_small slds-m-bottom_medium">
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                                <lightning-input
+                                    type="checkbox"
+                                    label={row.fieldLabels.nvrDvrRequiredAsPoe}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="nvrDvrRequiredAsPoe"
+                                    checked={row.nvrDvrRequiredAsPoe}
+                                    onchange={handleFieldChange}
+                                ></lightning-input>
+                            </div>
+                            <template if:true={row.nvrDvrRequiredAsPoe}>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label={row.fieldLabels.nvrDvrRecordInParallelWithSrd}
+                                        data-row-id={row.opportunitySiteId}
+                                        data-field="nvrDvrRecordInParallelWithSrd"
+                                        checked={row.nvrDvrRecordInParallelWithSrd}
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label={row.fieldLabels.permissionToResetNvrAndCameras}
+                                        data-row-id={row.opportunitySiteId}
+                                        data-field="permissionToResetNvrAndCameras"
+                                        checked={row.permissionToResetNvrAndCameras}
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                            <template if:true={row.nvrDvrRequiredAsPoe}>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                                    <lightning-input
+                                        type="text"
+                                        label={row.fieldLabels.cameraMake}
+                                        data-row-id={row.opportunitySiteId}
+                                        data-field="cameraMake"
+                                        value={row.cameraMake}
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                                    <lightning-input
+                                        type="text"
+                                        label={row.fieldLabels.cameraModel}
+                                        data-row-id={row.opportunitySiteId}
+                                        data-field="cameraModel"
+                                        value={row.cameraModel}
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                                    <lightning-input
+                                        type="text"
+                                        label={row.fieldLabels.nvrDvrUsername}
+                                        data-row-id={row.opportunitySiteId}
+                                        data-field="nvrDvrUsername"
+                                        value={row.nvrDvrUsername}
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
+                                    <lightning-input
+                                        type="text"
+                                        label={row.fieldLabels.nvrDvrPassword}
+                                        data-row-id={row.opportunitySiteId}
+                                        data-field="nvrDvrPassword"
+                                        value={row.nvrDvrPassword}
+                                        onchange={handleFieldChange}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                        </div>
+
+                    </div>
+
+                    <div class="site-card__section site-card__section--bordered">
+                        <div class="slds-text-title_caps slds-m-bottom_x-small site-card__section-title">Headset / HME Details</div>
+                        <div class="slds-grid slds-wrap slds-gutters_small slds-m-bottom_medium">
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                                <div class="slds-grid slds-wrap slds-gutters_small">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <template if:true={row.hasAudioTypesRequiredOptions}>
+                                            <lightning-combobox
+                                                label={row.audioTypesRequiredLabel}
+                                                data-row-id={row.opportunitySiteId}
+                                                data-field="audioTypesRequired"
+                                                value={row.audioTypesRequired}
+                                                options={row.audioTypesRequiredOptions}
+                                                onchange={handleFieldChange}
+                                            ></lightning-combobox>
+                                        </template>
+                                        <template if:false={row.hasAudioTypesRequiredOptions}>
+                                            <lightning-input
+                                                type="text"
+                                                label={row.audioTypesRequiredLabel}
+                                                data-row-id={row.opportunitySiteId}
+                                                data-field="audioTypesRequired"
+                                                value={row.audioTypesRequired}
+                                                onchange={handleFieldChange}
+                                            ></lightning-input>
+                                        </template>
+                                    </div>
+                                    <template if:true={row.showHeadsetAudioType}>
+                                        <div class="slds-col slds-size_1-of-1">
+                                            <lightning-input
+                                                type="text"
+                                                label={row.fieldLabels.headsetAudioType}
+                                                data-row-id={row.opportunitySiteId}
+                                                data-field="headsetAudioType"
+                                                value={row.headsetAudioType}
+                                                onchange={handleFieldChange}
+                                            ></lightning-input>
+                                        </div>
+                                    </template>
+                                    <template if:true={row.showHeadsetDependentFields}>
+                                        <div class="slds-col slds-size_1-of-1">
+                                            <lightning-input
+                                                type="text"
+                                                label={row.fieldLabels.zoomIp}
+                                                data-row-id={row.opportunitySiteId}
+                                                data-field="zoomIp"
+                                                value={row.zoomIp}
+                                                onchange={handleFieldChange}
+                                            ></lightning-input>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2">
+                                <div class="slds-grid slds-wrap slds-gutters_small">
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-input
+                                            type="text"
+                                            label={row.fieldLabels.hmeType}
+                                            data-row-id={row.opportunitySiteId}
+                                            data-field="hmeType"
+                                            value={row.hmeType}
+                                            onchange={handleFieldChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <template if:true={row.showHmeCredentialsFields}>
+                                        <div class="slds-col slds-size_1-of-1">
+                                            <lightning-input
+                                                type="text"
+                                                label={row.fieldLabels.hmeUsername}
+                                                data-row-id={row.opportunitySiteId}
+                                                data-field="hmeUsername"
+                                                value={row.hmeUsername}
+                                                onchange={handleFieldChange}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1">
+                                            <lightning-input
+                                                type="text"
+                                                label={row.fieldLabels.hmePassword}
+                                                data-row-id={row.opportunitySiteId}
+                                                data-field="hmePassword"
+                                                value={row.hmePassword}
+                                                onchange={handleFieldChange}
+                                            ></lightning-input>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </template>
+        </div>
+        </div>
+    </template>
+
+    <template if:true={isCreateContactModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">Create Contact</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-grid slds-wrap slds-gutters_small">
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-combobox
+                                label="Assign To"
+                                data-field="role"
+                                value={createContactRoleField}
+                                options={createContactRoleOptions}
+                                onchange={handleCreateContactFieldChange}
+                            ></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-input
+                                type="text"
+                                label="First Name"
+                                data-field="firstName"
+                                value={createContactFirstName}
+                                onchange={handleCreateContactFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-input
+                                type="text"
+                                label="Last Name"
+                                data-field="lastName"
+                                value={createContactLastName}
+                                onchange={handleCreateContactFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-input
+                                type="email"
+                                label="Email"
+                                data-field="email"
+                                value={createContactEmail}
+                                onchange={handleCreateContactFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <lightning-input
+                                type="tel"
+                                label="Phone"
+                                data-field="phone"
+                                value={createContactPhone}
+                                onchange={handleCreateContactFieldChange}
+                            ></lightning-input>
+                        </div>
+                        <template if:true={createContactError}>
+                            <div class="slds-col slds-size_1-of-1 slds-text-color_error">
+                                {createContactError}
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={closeCreateContactModal}></lightning-button>
+                    <lightning-button
+                        variant="brand"
+                        class="slds-m-left_small"
+                        label="Create"
+                        onclick={handleCreateContact}
+                    ></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

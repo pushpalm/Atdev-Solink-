@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>OpportunitySiteCameraDataController</members>
+        <members>OpportunitySiteCameraDataControllerTest</members>
+        <members>OpportunitySiteCameraUpdateAction</members>
+        <name>ApexClass</name>
+    </types> 
+    <types>
+        <members>cameraDataModeSelector</members>
+           <members>opportunitySiteCameraTable</members>
+           <members>opportunitySiteTemplateDownload</members>
+           <members>opportunitySiteTemplateUpload</members>
+           <members>manageOpportunitySiteCameraDataWrapper</members>
+        <name>LightningComponentBundle</name>
+    </types>    
+    <types>
+    <members>Manage_Opportunity_Site_Camera_Data</members>
+    <members>Update_Prospecting_Opportunity_Camera_Details</members>
+    <name>Flow</name>
+  </types>
+  <types>
+    <members>Opportunity</members>
+    <members>Opportunity_Site__c</members>
+    <members>Site__c</members>
+    <members>Contact</members>
+    <members>Account</members>
+    <name>CustomObject</name>
+  </types>
+    <version>66.0</version>
+</Package>

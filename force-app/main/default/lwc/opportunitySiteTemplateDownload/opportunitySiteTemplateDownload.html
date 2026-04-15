@@ -1,0 +1,21 @@
+<template>
+    <template if:true={errorMessage}>
+        <div class="slds-text-color_error slds-m-bottom_small">{errorMessage}</div>
+    </template>
+
+    <template if:true={showNoSitesMessage}>
+        <div class="slds-text-body_regular">
+            No sites are associated to this opportunity.
+        </div>
+    </template>
+
+    <template if:true={hasRows}>
+        <p class="slds-m-bottom_small">
+            Download a CSV template that includes the opportunity site id, site name, and editable camera fields.
+        </p>
+        <lightning-button
+            label="Download Template"
+            onclick={handleDownload}
+        ></lightning-button>
+    </template>
+</template>

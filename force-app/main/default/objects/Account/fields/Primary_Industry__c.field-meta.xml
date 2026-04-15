@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primary_Industry__c</fullName>
+    <label>Primary Industry</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Agriculture</fullName>
+                <default>false</default>
+                <label>Agriculture</label>
+            </value>
+            <value>
+                <fullName>Airport Vendor</fullName>
+                <default>false</default>
+                <label>Airport Vendor</label>
+            </value>
+            <value>
+                <fullName>Automotive</fullName>
+                <default>false</default>
+                <label>Automotive</label>
+            </value>
+            <value>
+                <fullName>Bar and Club</fullName>
+                <default>false</default>
+                <label>Bar and Club</label>
+            </value>
+            <value>
+                <fullName>Cannabis and Cultivation</fullName>
+                <default>false</default>
+                <label>Cannabis and Cultivation</label>
+            </value>
+            <value>
+                <fullName>C-Store and Gas</fullName>
+                <default>false</default>
+                <label>C-Store and Gas</label>
+            </value>
+            <value>
+                <fullName>Education</fullName>
+                <default>false</default>
+                <label>Education</label>
+            </value>
+            <value>
+                <fullName>Fast Casual</fullName>
+                <default>false</default>
+                <label>Fast Casual</label>
+            </value>
+            <value>
+                <fullName>Financial</fullName>
+                <default>false</default>
+                <label>Financial</label>
+            </value>
+            <value>
+                <fullName>FSR</fullName>
+                <default>false</default>
+                <label>FSR</label>
+            </value>
+            <value>
+                <fullName>Golf and Recreation</fullName>
+                <default>false</default>
+                <label>Golf and Recreation</label>
+            </value>
+            <value>
+                <fullName>Grocery</fullName>
+                <default>false</default>
+                <label>Grocery</label>
+            </value>
+            <value>
+                <fullName>Hardware and Building Materials</fullName>
+                <default>false</default>
+                <label>Hardware and Building Materials</label>
+            </value>
+            <value>
+                <fullName>Health and Beauty</fullName>
+                <default>false</default>
+                <label>Health and Beauty</label>
+            </value>
+            <value>
+                <fullName>Healthcare</fullName>
+                <default>false</default>
+                <label>Healthcare</label>
+            </value>
+            <value>
+                <fullName>Hotels and Accommodation</fullName>
+                <default>false</default>
+                <label>Hotels and Accommodation</label>
+            </value>
+            <value>
+                <fullName>Liquor Stores</fullName>
+                <default>false</default>
+                <label>Liquor Stores</label>
+            </value>
+            <value>
+                <fullName>Natural Resources</fullName>
+                <default>false</default>
+                <label>Natural Resources</label>
+            </value>
+            <value>
+                <fullName>Property Management</fullName>
+                <default>false</default>
+                <label>Property Management</label>
+            </value>
+            <value>
+                <fullName>Quick Service</fullName>
+                <default>false</default>
+                <label>Quick Service</label>
+            </value>
+            <value>
+                <fullName>Regulated</fullName>
+                <default>false</default>
+                <label>Regulated</label>
+            </value>
+            <value>
+                <fullName>Religious Organizations</fullName>
+                <default>false</default>
+                <label>Religious Organizations</label>
+            </value>
+            <value>
+                <fullName>Retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>Shelter and Resource Centre</fullName>
+                <default>false</default>
+                <label>Shelter and Resource Centre</label>
+            </value>
+            <value>
+                <fullName>SolinkInternal</fullName>
+                <default>false</default>
+                <label>SolinkInternal</label>
+            </value>
+            <value>
+                <fullName>Transportation</fullName>
+                <default>false</default>
+                <label>Transportation</label>
+            </value>
+            <value>
+                <fullName>Warehouse Logistics</fullName>
+                <default>false</default>
+                <label>Warehouse Logistics</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

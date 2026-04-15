@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Disqualification_Notes__c</fullName>
+    <description>Additional context or details about why the lead was disqualified.</description>
+    <inlineHelpText>Provide any relevant notes or details supporting the disqualification reason.</inlineHelpText>
+    <label>Disqualification Notes</label>
+    <length>32768</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

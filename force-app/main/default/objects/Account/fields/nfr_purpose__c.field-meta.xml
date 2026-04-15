@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>nfr_purpose__c</fullName>
+    <label>NFR Purpose</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Demo for Customers / Show Room</fullName>
+                <default>false</default>
+                <label>Demo for Customers / Show Room</label>
+            </value>
+            <value>
+                <fullName>Security Solution for Partner Business Office</fullName>
+                <default>false</default>
+                <label>Security Solution for Partner Business Office</label>
+            </value>
+            <value>
+                <fullName>Testing</fullName>
+                <default>false</default>
+                <label>Testing</label>
+            </value>
+            <value>
+                <fullName>Internal Sales Training</fullName>
+                <default>false</default>
+                <label>Internal Sales Training</label>
+            </value>
+            <value>
+                <fullName>Internal Technical Training</fullName>
+                <default>false</default>
+                <label>Internal Technical Training</label>
+            </value>
+            <value>
+                <fullName>Trade Show / Event Demo</fullName>
+                <default>false</default>
+                <label>Trade Show / Event Demo</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

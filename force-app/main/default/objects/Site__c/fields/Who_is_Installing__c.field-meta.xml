@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Who_is_Installing__c</fullName>
+    <label>Who is Installing?</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>I am installing</fullName>
+                <default>false</default>
+                <label>I am installing</label>
+            </value>
+            <value>
+                <fullName>Third Party install</fullName>
+                <default>false</default>
+                <label>Third Party install</label>
+            </value>
+            <value>
+                <fullName>Solink is installing</fullName>
+                <default>false</default>
+                <label>Solink is installing</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

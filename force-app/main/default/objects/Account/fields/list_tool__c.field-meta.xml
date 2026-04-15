@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>list_tool__c</fullName>
+    <label>List Tool</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Apollo</fullName>
+                <default>false</default>
+                <label>Apollo</label>
+            </value>
+            <value>
+                <fullName>ChainStoreGuide</fullName>
+                <default>false</default>
+                <label>ChainStoreGuide</label>
+            </value>
+            <value>
+                <fullName>FDD</fullName>
+                <default>false</default>
+                <label>FDD</label>
+            </value>
+            <value>
+                <fullName>Seamless.ai</fullName>
+                <default>false</default>
+                <label>Seamless.ai</label>
+            </value>
+            <value>
+                <fullName>Partner</fullName>
+                <default>false</default>
+                <label>Partner</label>
+            </value>
+            <value>
+                <fullName>Event</fullName>
+                <default>false</default>
+                <label>Event</label>
+            </value>
+            <value>
+                <fullName>Selling.com (fka Infotelligent)</fullName>
+                <default>false</default>
+                <label>Selling.com (fka Infotelligent)</label>
+            </value>
+            <value>
+                <fullName>EBQ</fullName>
+                <default>false</default>
+                <label>EBQ</label>
+            </value>
+            <value>
+                <fullName>Online Magazine Pages</fullName>
+                <default>false</default>
+                <label>Online Magazine Pages</label>
+            </value>
+            <value>
+                <fullName>CannaSpyGlass</fullName>
+                <default>false</default>
+                <label>CannaSpyGlass</label>
+            </value>
+            <value>
+                <fullName>ZoomInfo</fullName>
+                <default>false</default>
+                <label>ZoomInfo</label>
+            </value>
+            <value>
+                <fullName>Clay (Growth Experiment)</fullName>
+                <default>false</default>
+                <label>Clay (Growth Experiment)</label>
+            </value>
+            <value>
+                <fullName>2025 NACS enews</fullName>
+                <default>false</default>
+                <label>2025 NACS enews</label>
+            </value>
+            <value>
+                <fullName>Webinar</fullName>
+                <default>false</default>
+                <label>Webinar</label>
+            </value>
+            <value>
+                <fullName>OBEDIO</fullName>
+                <default>false</default>
+                <label>OBEDIO</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Clay (Enrichment)</fullName>
+                <default>false</default>
+                <label>Clay (Enrichment)</label>
+            </value>
+            <value>
+                <fullName>Wiza</fullName>
+                <default>false</default>
+                <label>Wiza</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

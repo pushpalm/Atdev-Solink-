@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Please Confirm Your Site Details</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f6f9; font-family:Arial, Helvetica, sans-serif; color:#1f1f1f;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f4f6f9; margin:0; padding:24px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="width:640px; max-width:640px; background-color:#ffffff; border-radius:8px; overflow:hidden;">
+                    <tr>
+                        <td style="padding:24px 32px 16px 32px; background-color:#ffffff; border-bottom:1px solid #e5e5e5;">
+                            <img
+                                src="https://solink--atdev.sandbox.my.salesforce.com/servlet/servlet.ImageServer?id=015G100000AlqAHIAZ&amp;oid=00DG100000A9TmbMAF"
+                                alt="Solink"
+                                style="display:block; max-width:180px; height:auto; border:0;"
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:32px;">
+                            <p style="margin:0 0 16px 0; font-size:16px; line-height:24px;">Hello {!Contact.Name},</p>
+
+                            <p style="margin:0 0 16px 0; font-size:16px; line-height:24px;">
+                                To help us move forward with your Solink setup, please provide the site details for your location(s) by clicking the link below.
+                            </p>
+
+                            <p style="margin:0 0 16px 0; font-size:16px; line-height:24px;">
+                                <a
+                                    href="https://solink--atdev.sandbox.my.site.com/s/account-and-site?oppid={! URLENCODE (Opportunity.Id)}"
+                                    style="display:inline-block; padding:12px 20px; background-color:#0176d3; color:#ffffff; text-decoration:none; border-radius:4px; font-weight:bold;"
+                                >
+                                    Provide Site Details
+                                </a>
+                            </p>
+
+                          
+                            <p style="margin:0 0 16px 0; font-size:16px; line-height:24px;">
+                                If you have any questions or are unable to access the link, please reach out to your AE and they be able to will help.
+                            </p>
+
+                            <p style="margin:0 0 24px 0; font-size:16px; line-height:24px;">
+                                Thank you,
+                                <br />
+                                Solink Team
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Deal_Trigger__c</fullName>
+    <label>Deal Trigger</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Sales (hunted)</fullName>
+                <default>false</default>
+                <label>Sales (hunted)</label>
+            </value>
+            <value>
+                <fullName>Marketing</fullName>
+                <default>false</default>
+                <label>Marketing</label>
+            </value>
+            <value>
+                <fullName>Event/Trade-show</fullName>
+                <default>false</default>
+                <label>Event/Trade-show</label>
+            </value>
+            <value>
+                <fullName>Expansion - Partner/Channel</fullName>
+                <default>false</default>
+                <label>Expansion - Partner/Channel</label>
+            </value>
+            <value>
+                <fullName>Expansion</fullName>
+                <default>false</default>
+                <label>Expansion</label>
+            </value>
+            <value>
+                <fullName>Customer referral</fullName>
+                <default>false</default>
+                <label>Customer referral</label>
+            </value>
+            <value>
+                <fullName>Enterprise</fullName>
+                <default>false</default>
+                <label>Enterprise</label>
+            </value>
+            <value>
+                <fullName>Enterprise - Partner/Channel</fullName>
+                <default>false</default>
+                <label>Enterprise - Partner/Channel</label>
+            </value>
+            <value>
+                <fullName>Enterprise expansion</fullName>
+                <default>false</default>
+                <label>Enterprise expansion</label>
+            </value>
+            <value>
+                <fullName>Enterprise event</fullName>
+                <default>false</default>
+                <label>Enterprise event</label>
+            </value>
+            <value>
+                <fullName>Partner pipeline</fullName>
+                <default>false</default>
+                <label>Partner pipeline</label>
+            </value>
+            <value>
+                <fullName>Partner Marketing</fullName>
+                <default>false</default>
+                <label>Partner Marketing</label>
+            </value>
+            <value>
+                <fullName>BDR (Hunted)</fullName>
+                <default>false</default>
+                <label>BDR (Hunted)</label>
+            </value>
+            <value>
+                <fullName>Partnership (Hunted)</fullName>
+                <default>false</default>
+                <label>Partnership (Hunted)</label>
+            </value>
+            <value>
+                <fullName>Partner lead (referral)</fullName>
+                <default>false</default>
+                <label>Partner lead (referral)</label>
+            </value>
+            <value>
+                <fullName>Reseller</fullName>
+                <default>false</default>
+                <label>Reseller</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Flagged_for_SF_Import__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>&quot;A checkbox indicating whether the record has been reviewed and marked for import into Salesforce (SF)&quot;</description>
+    <label>Flagged for SF Import</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Checkbox</type>
+</CustomField>

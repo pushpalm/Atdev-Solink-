@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NVR_DVR_Record_In_Parallel_With_SRD__c</fullName>
+    <defaultValue>false</defaultValue>
+    <label>NVR DVR Record In Parallel With SRD</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,63 @@
+<template>
+    <div class="selector">
+        <fieldset class="selector__group">
+            <div class="selector__header">
+                <legend class="selector__legend">Choose an option</legend>
+                <span class="selector__recommendation">{labels.manualDataEntryRecommendation}</span>
+            </div>
+
+            <div class="selector__options">
+                <label class={manualOptionClass}>
+                    <input
+                        class="selector__input"
+                        type="radio"
+                        name="cameraDataMode"
+                        value="manual"
+                        checked={isManualSelected}
+                        onchange={handleChange}
+                    />
+                    <span class="selector__content">
+                        <span class="selector__title">Enter data manually</span>
+                        <span class="selector__description">
+                            Review and update camera details directly in this flow.
+                        </span>
+                    </span>
+                </label>
+
+                <label class={downloadOptionClass}>
+                    <input
+                        class="selector__input"
+                        type="radio"
+                        name="cameraDataMode"
+                        value="download"
+                        checked={isDownloadSelected}
+                        onchange={handleChange}
+                    />
+                    <span class="selector__content">
+                        <span class="selector__title">Download template</span>
+                        <span class="selector__description">
+                            Export the CSV template for this opportunity.
+                        </span>
+                    </span>
+                </label>
+
+                <label class={uploadOptionClass}>
+                    <input
+                        class="selector__input"
+                        type="radio"
+                        name="cameraDataMode"
+                        value="upload"
+                        checked={isUploadSelected}
+                        onchange={handleChange}
+                    />
+                    <span class="selector__content">
+                        <span class="selector__title">Upload completed site data</span>
+                        <span class="selector__description">
+                            Upload the completed CSV template to update site data.
+                        </span>
+                    </span>
+                </label>
+            </div>
+        </fieldset>
+    </div>
+</template>

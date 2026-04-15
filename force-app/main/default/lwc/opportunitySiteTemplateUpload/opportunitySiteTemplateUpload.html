@@ -1,0 +1,27 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 04-16-2026
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={errorMessage}>
+        <div class="slds-text-color_error slds-m-bottom_small">{errorMessage}</div>
+    </template>
+
+    <lightning-input
+        type="file"
+        label="Upload completed template"
+        accept=".csv,text/csv"
+        onchange={handleFileChange}
+    ></lightning-input>
+
+    <template if:true={fileName}>
+        <p class="slds-m-top_small">Selected file: {fileName}</p>
+    </template>
+
+    <template if:true={rowCount}>
+        <p class="slds-m-top_small">Rows ready to update: {rowCount}</p>
+    </template>
+</template>

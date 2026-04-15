@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Highest_Discount_Field_Services__c</fullName>
+    <description>The highest discount percentage applied to any Field Services &amp; Labor line item on this Quote / Sales Order</description>
+    <label>Highest Discount - Field Services</label>
+    <precision>5</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Percent</type>
+</CustomField>
