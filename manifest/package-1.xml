@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <types>
+        <!-- Custom objects used by the code -->
+        <members>Opportunity_Site__c</members>
+        <members>Site__c</members>
+        <name>CustomObject</name>
+    </types>
+
+    <types>
+        <!-- Opportunity custom fields -->
+        <members>Opportunity.Onsite_Contact_Name__c</members>
+        <members>Opportunity.Install_Contact__c</members>
+        <members>Opportunity.Data_Contact__c</members>
+        <members>Opportunity.Billing_Contact__c</members>
+        <members>Opportunity.Account_Administrator__c</members>
+        <members>Opportunity.Compatibility_Data__c</members>
+        <members>Opportunity.Is_CompatibilityDataExist__c</members>
+        <!---Added due to deployment issue-->
+        <members>Opportunity.Parent_Opportunity__c</members>
+        <members>Opportunity.Deal_Type__c</members>
+        <members>Opportunity.Deal_Name__c</members>
+        <members>Opportunity.Customer_Success_Manager__c</members>
+        <members>Opportunity.Sales_Engineer__c</members>
+        <members>Opportunity.Deal_Trigger__c</members>
+        <members>Opportunity.Sales_Segment__c</members>
+        <members>Opportunity.BDR_SDR__c</members>
+        <members>Opportunity.Pilot_Type__c</members>
+        <members>Opportunity.Pilot_Term__c</members>
+        <members>Opportunity.Billing_Term__c</members>
+        <members>Opportunity.Payment_Terms__c</members>
+        <members>Opportunity.Contract_Term_Discount__c</members>
+        <members>Opportunity.Contract_Term__c</members>
+        <members>Opportunity.Total_Monthly_Recurring__c</members>
+        <members>Opportunity.Total_One_Time_Fees__c</members>
+        <members>Opportunity.Reseller_Discount__c</members>
+        <members>Opportunity.Promotion_Code__c</members>
+        <members>Opportunity.Reseller__c</members>
+        <members>Opportunity.Number_of_Sites__c</members>
+        <members>Opportunity.Contains_Discount__c</members>
+        <members>Opportunity.Required_Approval_Level__c</members>
+        <members>Opportunity.Highest_Discount_Add_Ons__c</members>
+        <members>Opportunity.Highest_Discount_Cameras__c</members>
+        <members>Opportunity.Highest_Discount_Hardware__c</members>
+        <members>Opportunity.Highest_Discount_Field_Services__c</members>
+        <members>Opportunity.Site_Survey_Status__c</members>
+        <members>Opportunity.Solution_Engineer__c</members>
+        <members>Opportunity.Contains_Data_Integration__c</members>
+        <members>Opportunity.Contains_New_Integration__c</members>
+        <members>Opportunity.Next_Step_Date__c</members>
+        <members>Opportunity.Future_Sites__c</members>
+        <members>Opportunity.Opportunity_Link__c</members>
+        <members>Opportunity.PO_Number__c</members>
+
+        <!-- Opportunity_Site__c fields -->
+        <members>Opportunity_Site__c.Opportunity__c</members>
+        <members>Opportunity_Site__c.Site__c</members>
+        <members>Opportunity_Site__c.Audio_Type_s_Required__c</members>
+
+        <!-- Site__c fields -->
+        <members>Site__c.Account__c</members>
+        <members>Site__c.Number_of_Cameras__c</members>
+        <members>Site__c.Point_of_Sale_System__c</members>
+        <members>Site__c.NVR_DVR_Make__c</members>
+        <members>Site__c.NVR_DVR_Model__c</members>
+        <members>Site__c.Camera_Make__c</members>
+        <members>Site__c.Camera_Model__c</members>
+        <members>Site__c.Data_integrations_required_other__c</members>
+        <members>Site__c.Shipping_Address__c</members>
+        <members>Site__c.Who_is_Installing__c</members>
+        <members>Site__c.Additional_billing_notes__c</members>
+        <members>Site__c.NVR_DVR_Username__c</members>
+        <members>Site__c.NVR_DVR_Password__c</members>
+        <members>Site__c.NVR_DVR_Record_In_Parallel_With_SRD__c</members>
+        <members>Site__c.NVR_DVR_Required_as_POE__c</members>
+        <members>Site__c.Permission_to_Reset_NVR_and_Cameras__c</members>
+        <members>Site__c.Headset_Audio_Type__c</members>
+        <members>Site__c.HME_Type__c</members>
+        <members>Site__c.HME_Username__c</members>
+        <members>Site__c.HME_Password__c</members>
+        <members>Site__c.Zoom_IP__c</members>
+        <members>Site__c.Site_Address__c</members>
+        <members>Site__c.Site_Open_Date__c</members>
+        <members>Site__c.Shipping_Contact__c</members>
+        <members>Site__c.Install_Contact__c</members>
+        <members>Site__c.Data_Contact__c</members>
+        <members>Site__c.Billing_Contact__c</members>
+        <members>Site__c.Account_Administrator__c</members>
+
+        <name>CustomField</name>
+    </types>
+<types>
+    <members>Solink_Email_Templates</members>
+    <name>EmailFolder</name>
+</types>
+
+   <types>
+    <members>Solink_Email_Templates/Experience_Cloud_New_Member_Welcome_Email_Solink_HTML</members>
+    <members>Solink_Email_Templates/Request_Site_Details</members>
+    <name>EmailTemplate</name>
+</types>
+    <version>66.0</version>
+</Package>

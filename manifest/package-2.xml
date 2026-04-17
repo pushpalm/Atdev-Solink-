@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+  <types>
+    <members>CheckExternalUserAction</members>
+    <members>OpportunitySiteCameraDataController</members>
+    <members>OpportunitySiteCameraDataControllerTest</members>
+    <members>OpportunitySiteCameraUpdateAction</members>
+    <members>SiteDetailsEmailSendAction</members>
+    <name>ApexClass</name>
+  </types>
+    <types>
+    
+    <members>Manage_Opportunity_Site_Camera_Data</members>
+    <members>Update_Prospecting_Opportunity_Camera_Details</members>
+    <name>Flow</name>
+  </types>
+   <types>
+    <members>cameraDataModeSelector</members>
+    <members>opportunitySiteCameraTable</members>
+       <members>manageOpportunitySiteCameraDataWrapper</members>
+    <members>opportunitySiteTemplateDownload</members>
+    <members>opportunitySiteTemplateUpload</members>
+    <name>LightningComponentBundle</name>
+  </types>
+  <types>
+        <members>Opportunity.Collect_Site_Data</members>
+        <name>QuickAction</name>
+    </types>
+      <types>
+        <members>Opportunity_Record_Page</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>DownloadTemplateNextStepMessage</members>
+        <members>ManualDataEntryRecommendation</members>
+        <members>SolinkCustomerPortalUserProfileName</members>
+        <members>Collect_Site_Data_Email_Template_Id</members>
+        <name>CustomLabel</name>
+    </types>
+  <version>66.0</version>
+</Package>
