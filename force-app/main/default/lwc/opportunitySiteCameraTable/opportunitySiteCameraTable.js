@@ -1,6 +1,7 @@
-import { api, LightningElement, wire } from 'lwc';
-import { FlowAttributeChangeEvent } from 'lightning/flowSupport';
+import { api, LightningElement, track, wire } from 'lwc';
+import { FlowAttributeChangeEvent, FlowNavigationNextEvent, FlowNavigationBackEvent } from 'lightning/flowSupport';
 import { getObjectInfo, getPicklistValuesByRecordType } from 'lightning/uiObjectInfoApi';
+import { refreshApex } from '@salesforce/apex';
 import SITE_OBJECT from '@salesforce/schema/Site__c';
 import getOpportunitySiteCameraRows from '@salesforce/apex/OpportunitySiteCameraDataController.getOpportunitySiteCameraRows';
 import getEditableFieldConfig from '@salesforce/apex/OpportunitySiteCameraDataController.getEditableFieldConfig';
@@ -62,9 +63,74 @@ const CONTACT_ROLE_OPTIONS = [
     { label: 'Account Administrator', value: 'accountAdministratorContactId' }
 ];
 
+// Fields that must have a non-empty value before the form can proceed.
+// Each entry: { key: rowProperty, label: displayName, condition: fn(row) | undefined }
+const REQUIRED_FIELDS = [
+    { key: 'siteAddressStreet', label: 'Site Address Street' },
+    { key: 'siteAddressCity', label: 'Site Address City' },
+    { key: 'siteAddressStateCode', label: 'Site Address State Code' },
+    { key: 'siteAddressPostalCode', label: 'Site Address Postal Code' },
+    { key: 'siteAddressCountryCode', label: 'Site Address Country Code' },
+    { key: 'totalCamera', label: 'Number of Cameras' },
+    { key: 'pointOfSaleSystem', label: 'Point of Sale System' },
+    { key: 'cameraMakeCustom', label: 'Camera Make' },
+    { key: 'cameraModelCustom', label: 'Camera Model' },
+    { key: 'cameraMake', label: 'NVR DVR Make' },
+    { key: 'cameraModel', label: 'NVR DVR Model' },
+    { key: 'dataIntegrationsRequiredOther', label: 'Data Integrations Required Other' },
+    { key: 'whoIsInstalling', label: 'Who is Installing' },
+    { key: 'additionalBillingNotes', label: 'Additional Billing Notes' },
+    { key: 'shippingAddressStreet', label: 'Shipping Address Street' },
+    { key: 'shippingAddressCity', label: 'Shipping Address City' },
+    { key: 'shippingAddressStateCode', label: 'Shipping Address State Code' },
+    { key: 'shippingAddressPostalCode', label: 'Shipping Address Postal Code' },
+    { key: 'shippingAddressCountryCode', label: 'Shipping Address Country Code' },
+    { key: 'siteOpenDate', label: 'Site Open Date' },
+    { key: 'shippingContactId', label: 'Shipping Contact' },
+    { key: 'installContactId', label: 'Install Contact' },
+    { key: 'dataContactId', label: 'Data Contact' },
+    { key: 'billingContactId', label: 'Billing Contact' },
+    { key: 'accountAdministratorContactId', label: 'Account Administrator' },
+    // Conditional: only required when NVR DVR Required as POE is checked
+    {
+        key: 'nvrDvrUsername',
+        label: 'NVR DVR Username',
+        condition: (row) => row.nvrDvrRequiredAsPoe === true
+    },
+    {
+        key: 'nvrDvrPassword',
+        label: 'NVR DVR Password',
+        condition: (row) => row.nvrDvrRequiredAsPoe === true
+    },
+];
+
 export default class OpportunitySiteCameraTable extends LightningElement {
     _opportunityId;
-    @api updatesJson;
+    _updatesJson;
+    _pendingEdits = null;
+
+    @api
+    get updatesJson() {
+        return this._updatesJson;
+    }
+
+    set updatesJson(value) {
+        this._updatesJson = value;
+        // If the Flow is passing back edited data (component re-instantiation after
+        // validation failure), restore those edits into _pendingEdits so the wire
+        // handler can merge them instead of overwriting with Apex data.
+        if (value && !this._initialLoadComplete) {
+            try {
+                const parsed = JSON.parse(value);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    this._pendingEdits = parsed;
+                    this._revalidateOnLoad = true;
+                }
+            } catch (e) {
+                // Ignore parse errors
+            }
+        }
+    }
 
     @api
     get opportunityId() {
@@ -78,8 +144,11 @@ export default class OpportunitySiteCameraTable extends LightningElement {
         // Reset transient UI state when the resolved id changes.
         if (previousOpportunityId !== this._opportunityId) {
             this.errorMessage = undefined;
-            this.validationMessage = undefined;
+            this.validationErrors = [];
             this.isLoaded = false;
+            this._initialLoadComplete = false;
+            this._isEdited = false;
+            this._pendingEdits = null;
         }
     }
 
@@ -87,7 +156,12 @@ export default class OpportunitySiteCameraTable extends LightningElement {
     rows = [];
     fieldConfig = DEFAULT_FIELD_CONFIG;
     errorMessage;
-    validationMessage;
+    @track validationErrors = [];
+    showValidationBanner = false;
+    _scrollToErrors = false;
+    _initialLoadComplete = false;
+    _isEdited = false;
+    _revalidateOnLoad = false;
     isLoaded = false;
     isCreateContactModalOpen = false;
     createContactRowId;
@@ -99,6 +173,33 @@ export default class OpportunitySiteCameraTable extends LightningElement {
     createContactError;
 
     objectInfo;
+    _wiredRowsResult;
+    _needsRefresh = true;
+
+    connectedCallback() {
+        this._needsRefresh = true;
+    }
+
+    renderedCallback() {
+        // After the first render with data loaded, re-run validation to show the
+        // banner if this is a re-instantiation after validation failure (detected
+        // by having received pending edits via updatesJson setter).
+        if (this._revalidateOnLoad && this.isLoaded && this.rows.length > 0) {
+            this._revalidateOnLoad = false;
+            // Run validation in the next microtask to ensure DOM is settled.
+            Promise.resolve().then(() => {
+                this.runValidation();
+            });
+        }
+
+        if (this._scrollToErrors) {
+            this._scrollToErrors = false;
+            const banner = this.template.querySelector('[data-id="validation-banner"]');
+            if (banner) {
+                banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    }
 
     @wire(getObjectInfo, { objectApiName: SITE_OBJECT })
     wiredObjectInfo(value) {
@@ -130,21 +231,58 @@ export default class OpportunitySiteCameraTable extends LightningElement {
 
     @wire(getOpportunitySiteCameraRows, { opportunityId: '$wiredOpportunityId' })
     wiredRows(value) {
+        this._wiredRowsResult = value;
         const { data, error } = value;
         this.isLoaded = true;
 
         if (data) {
-            this.rawRows = data;
+            // If we have pending edits from a previous component instance (validation
+            // failure scenario), merge them with the fresh Apex data.
+            if (this._pendingEdits && this._pendingEdits.length > 0) {
+                const editsMap = new Map();
+                this._pendingEdits.forEach((edit) => {
+                    if (edit.opportunitySiteId) {
+                        editsMap.set(edit.opportunitySiteId, edit);
+                    }
+                });
+
+                this.rawRows = data.map((apexRow) => {
+                    const edit = editsMap.get(apexRow.opportunitySiteId);
+                    if (edit) {
+                        return { ...apexRow, ...edit };
+                    }
+                    return apexRow;
+                });
+                this._pendingEdits = null;
+                // Protect the merged edits from being overwritten by subsequent wire calls.
+                this._isEdited = true;
+            } else if (!this._isEdited) {
+                // Accept all wire updates (including server-refresh after prior saves)
+                // until the user actually starts editing the form.
+                this.rawRows = data;
+            }
+
+            this._initialLoadComplete = true;
             this.rows = this.buildRows();
             this.errorMessage = undefined;
-            this.validationMessage = undefined;
-            this.publishRows();
+            if (!this._pendingEdits) {
+                this.publishRows();
+            }
+
+            // After processing (possibly cached) data, force a server refresh
+            // so we pick up any changes saved in a previous session.
+            if (this._needsRefresh) {
+                this._needsRefresh = false;
+                refreshApex(this._wiredRowsResult);
+            }
             return;
         }
 
-        this.rawRows = [];
-        this.rows = [];
-        this.publishRows();
+        if (!this._initialLoadComplete) {
+            this.rawRows = [];
+            this.rows = [];
+            this.publishRows();
+        }
         this.errorMessage = this.normalizeError(error);
     }
 
@@ -173,6 +311,7 @@ export default class OpportunitySiteCameraTable extends LightningElement {
     get hasRows() {
         return this.rows.length > 0;
     }
+
 
     get showNoSitesMessage() {
         return this.isLoaded && !this.errorMessage && !this.hasRows;
@@ -342,6 +481,10 @@ export default class OpportunitySiteCameraTable extends LightningElement {
     }
 
     handleFieldChange(event) {
+        this._initialLoadComplete = true;
+        this._isEdited = true;
+        this.validationErrors = [];
+        this.showValidationBanner = false;
         const rowId = event.target.dataset.rowId;
         const fieldName = event.target.dataset.field;
         let fieldValue;
@@ -500,79 +643,73 @@ export default class OpportunitySiteCameraTable extends LightningElement {
         }
     }
 
-    @api
-    validate() {
-        if (!this.hasRows) {
-            this.validationMessage = 'This opportunity has no sites available to update.';
-            return {
-                isValid: false,
-                errorMessage: this.validationMessage
-            };
-        }
-
-        const requiredFields = [
-            'totalCamera',
-            'pointOfSaleSystem',
-            'siteOpenDate',
-            'cameraMakeCustom',
-            'cameraModelCustom',
-            'dataIntegrationsRequiredOther',
-            'siteAddressStreet',
-            'siteAddressCity',
-            'siteAddressStateCode',
-            'siteAddressPostalCode',
-            'siteAddressCountryCode',
-            'shippingAddressStreet',
-            'shippingAddressCity',
-            'shippingAddressStateCode',
-            'shippingAddressPostalCode',
-            'shippingAddressCountryCode',
-            'whoIsInstalling',
-            'additionalBillingNotes',
-            'shippingContactId',
-            'installContactId',
-            'dataContactId',
-            'billingContactId',
-            'accountAdministratorContactId'
-        ];
-
-        const nvrRequiredFields = [
-            'cameraMake',
-            'cameraModel',
-            'nvrDvrRecordInParallelWithSrd',
-            'permissionToResetNvrAndCameras',
-            'nvrDvrUsername',
-            'nvrDvrPassword'
-        ];
-        const invalidSiteNames = [];
+    runValidation() {
+        const siteErrors = [];
 
         this.rows.forEach((row) => {
-            const hasMissingRequiredField = requiredFields.some((fieldName) => this.isBlankValue(row[fieldName]));
-            const hasMissingNvrField =
-                row.nvrDvrRequiredAsPoe && nvrRequiredFields.some((fieldName) => this.isBlankValue(row[fieldName]));
+            const missingLabels = [];
 
-            if (hasMissingRequiredField || hasMissingNvrField) {
-                invalidSiteNames.push(row.siteName || 'Unnamed Site');
+            REQUIRED_FIELDS.forEach(({ key, label, condition }) => {
+                if (condition && !condition(row)) {
+                    return;
+                }
+                const value = row[key];
+                const isBlank =
+                    value === undefined ||
+                    value === null ||
+                    (typeof value === 'string' && value.trim() === '') ||
+                    (typeof value === 'number' && Number.isNaN(value));
+                if (isBlank) {
+                    missingLabels.push(label);
+                }
+            });
+
+            if (missingLabels.length > 0) {
+                siteErrors.push({
+                    id: row.opportunitySiteId,
+                    siteName: row.siteName || 'Unnamed Site',
+                    messages: missingLabels,
+                    messagesJoined: missingLabels.join(', ')
+                });
             }
         });
 
-        if (invalidSiteNames.length > 0) {
-            const uniqueInvalidSites = [...new Set(invalidSiteNames)];
-            this.validationMessage = `Please complete all required fields before continuing. Missing values found for: ${uniqueInvalidSites.join(
-                ', '
-            )}.`;
-            return {
-                isValid: false,
-                errorMessage: this.validationMessage
-            };
+        // Force reactivity by creating a new array reference
+        this.validationErrors = [...siteErrors];
+        this.showValidationBanner = siteErrors.length > 0;
+        console.log('runValidation complete - showValidationBanner:', this.showValidationBanner, 'errors:', siteErrors.length);
+        if (siteErrors.length > 0) {
+            this._scrollToErrors = true;
         }
-
-        this.validationMessage = undefined;
-        return { isValid: true };
+        return siteErrors;
     }
 
-    get displayedErrorMessage() {
-        return this.validationMessage || this.errorMessage;
+    handlePrevious() {
+        this.dispatchEvent(new FlowNavigationBackEvent());
+    }
+
+    handleNext() {
+        if (!this.hasRows) {
+            return;
+        }
+        const siteErrors = this.runValidation();
+        if (siteErrors.length === 0) {
+            this.dispatchEvent(new FlowNavigationNextEvent());
+        }
+        // If errors exist, the banner is shown inline and we do not navigate.
+    }
+
+    @api
+    validate() {
+        // Navigation is controlled by handleNext which runs validation before
+        // dispatching FlowNavigationNextEvent. This hook is a safety net only.
+        if (!this.hasRows) {
+            return {
+                isValid: false,
+                errorMessage: 'This opportunity has no sites available to update.'
+            };
+        }
+        return { isValid: true };
     }
 
     isBlankValue(value) {
@@ -580,7 +717,7 @@ export default class OpportunitySiteCameraTable extends LightningElement {
     }
 
     publishRows() {
-        this.updatesJson = JSON.stringify(
+        const json = JSON.stringify(
             this.rows.map((row) => ({
                 opportunitySiteId: row.opportunitySiteId,
                 siteId: row.siteId,
@@ -622,7 +759,8 @@ export default class OpportunitySiteCameraTable extends LightningElement {
                 accountAdministratorContactId: row.accountAdministratorContactId || null
             }))
         );
-        this.dispatchEvent(new FlowAttributeChangeEvent('updatesJson', this.updatesJson));
+        this._updatesJson = json;
+        this.dispatchEvent(new FlowAttributeChangeEvent('updatesJson', json));
     }
 
     normalizeError(error) {

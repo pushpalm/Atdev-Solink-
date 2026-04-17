@@ -21,9 +21,22 @@
                 {siteCount} site(s) to update
             </div>
         </div>
-        
-        <template if:true={displayedErrorMessage}>
-            <div class="slds-text-color_error slds-m-bottom_small table-shell__error-banner">{displayedErrorMessage}</div>
+
+        <template if:true={errorMessage}>
+            <div class="validation-banner slds-m-bottom_medium" role="alert">
+                <p class="validation-banner__heading">{errorMessage}</p>
+            </div>
+        </template>
+
+        <template if:true={showValidationBanner}>
+            <div class="validation-banner slds-m-bottom_medium" role="alert" data-id="validation-banner">
+                <p class="validation-banner__heading">Please fill in all required fields before continuing.</p>
+                <template for:each={validationErrors} for:item="siteError">
+                    <div key={siteError.id} class="validation-banner__site">
+                        <strong>{siteError.siteName}:</strong> {siteError.messagesJoined}
+                    </div>
+                </template>
+            </div>
         </template>
 
         <div class="site-list">
@@ -474,6 +487,11 @@
                     </div>
                 </section>
             </template>
+        </div>
+
+        <div class="form-footer">
+            <lightning-button label="Previous" onclick={handlePrevious}></lightning-button>
+            <lightning-button label="Next" variant="brand" onclick={handleNext}></lightning-button>
         </div>
         </div>
     </template>

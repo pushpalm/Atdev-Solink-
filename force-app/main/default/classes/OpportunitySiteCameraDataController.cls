@@ -127,6 +127,8 @@ public with sharing class OpportunitySiteCameraDataController {
             throw new AuraHandledException('First Name, Last Name, Email, and Phone are required to create a contact.');
         }
 
+        // Delegate the insert to a without-sharing helper so external users
+        // can create contacts tied to the opportunity account.
         return new ContactCreationSystemService().createContactForOpportunity(
             opportunityId,
             firstName,
@@ -447,7 +449,7 @@ public with sharing class OpportunitySiteCameraDataController {
 
         return parts.isEmpty() ? null : String.join(parts, ', ');
     }
-
+    // Added on April 17th Pushpi Mandal
     // Runs in system context so portal users can create the contact
     // as long as the target opportunity/account is valid.
     private without sharing class ContactCreationSystemService {
@@ -475,6 +477,8 @@ public with sharing class OpportunitySiteCameraDataController {
                 Phone = phone.trim(),
                 AccountId = targetOpportunity.AccountId
             );
+            // Do not set OwnerId explicitly. Let Salesforce assign ownership to
+            // avoid portal-user cross-reference ownership errors.
             insert newContact;
 
             ContactOption option = new ContactOption();

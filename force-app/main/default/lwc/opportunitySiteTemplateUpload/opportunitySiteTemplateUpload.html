@@ -6,8 +6,25 @@
   @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
 -->
 <template>
-    <template if:true={errorMessage}>
-        <div class="slds-text-color_error slds-m-bottom_small">{errorMessage}</div>
+    <template if:true={hasError}>
+        <div class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_small" role="alert">
+            <template if:true={errorMessage}>
+                <p>{errorMessage}</p>
+            </template>
+            <template if:true={hasValidationErrors}>
+                <p><strong>The following required fields are missing. Please update your CSV and re-upload:</strong></p>
+                <template for:each={validationErrors} for:item="rowError">
+                    <div key={rowError.rowLabel} class="slds-m-top_x-small">
+                        <p><strong>{rowError.rowLabel}</strong></p>
+                        <ul class="slds-list_dotted">
+                            <template for:each={rowError.missingFields} for:item="field">
+                                <li key={field}>{field}</li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </template>
+        </div>
     </template>
 
     <lightning-input
@@ -24,4 +41,14 @@
     <template if:true={rowCount}>
         <p class="slds-m-top_small">Rows ready to update: {rowCount}</p>
     </template>
+
+    <div class="custom-footer">
+        <lightning-button label="Previous" onclick={handlePrevious}></lightning-button>
+        <lightning-button
+            variant="brand"
+            label="Next"
+            disabled={cannotProceed}
+            onclick={handleNext}
+        ></lightning-button>
+    </div>
 </template>

@@ -13,16 +13,18 @@ export default class OpportunitySiteTemplateDownload extends LightningElement {
 
     @wire(getOpportunitySiteCameraRows, { opportunityId: '$opportunityId' })
     wiredRows({ data, error }) {
-        this.isLoaded = true;
-
         if (data) {
+            this.isLoaded = true;
             this.rows = data;
             this.errorMessage = undefined;
             return;
         }
 
-        this.rows = [];
-        this.errorMessage = this.normalizeError(error);
+        if (error) {
+            this.isLoaded = true;
+            this.rows = [];
+            this.errorMessage = this.normalizeError(error);
+        }
     }
 
     @wire(getEditableFieldConfig)

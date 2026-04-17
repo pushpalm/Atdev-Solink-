@@ -17,7 +17,6 @@
                 name="updatesJson"
                 type="String"
                 label="Updates JSON"
-                role="outputOnly"
             />
         </targetConfig>
     </targetConfigs>

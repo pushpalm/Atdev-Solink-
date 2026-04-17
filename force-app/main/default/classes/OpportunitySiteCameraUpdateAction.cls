@@ -17,20 +17,8 @@ public with sharing class OpportunitySiteCameraUpdateAction {
     public static List<Result> updateCameraData(List<Request> requests) {
         List<Result> results = new List<Result>();
 
-        for (Integer requestIndex = 0; requestIndex < requests.size(); requestIndex++) {
-            try {
-                results.add(processRequest(requests[requestIndex]));
-            } catch (SiteCameraUpdateException handledException) {
-                throw handledException;
-            } catch (Exception unexpectedException) {
-                // Preserve request index to help identify the failing flow element input.
-                throw new SiteCameraUpdateException(
-                    'Unable to update site camera data for request #' +
-                    String.valueOf(requestIndex + 1) +
-                    ': ' +
-                    unexpectedException.getMessage()
-                );
-            }
+        for (Request request : requests) {
+            results.add(processRequest(request));
         }
 
         return results;
@@ -61,166 +49,159 @@ public with sharing class OpportunitySiteCameraUpdateAction {
 
         // Deserialize untyped so blank strings in typed fields (Date/Decimal/Id)
         // can be normalized to null instead of throwing JSON parse errors.
-        List<Object> requestedUpdates;
-        try {
-            // Untyped JSON lets us accept blank values and convert per-field safely below.
-            requestedUpdates = (List<Object>) JSON.deserializeUntyped(request.updatesJson);
-        } catch (Exception jsonException) {
-            throw new SiteCameraUpdateException('The uploaded update payload is invalid JSON.');
-        }
+        List<Object> requestedUpdates = (List<Object>) JSON.deserializeUntyped(request.updatesJson);
 
         List<Site__c> sitesToUpdate = new List<Site__c>();
         List<Opportunity_Site__c> opportunitySitesToUpdate = new List<Opportunity_Site__c>();
-        Integer rowNumber = 1;
         for (Object rowObject : requestedUpdates) {
             if (!(rowObject instanceof Map<String, Object>)) {
-                rowNumber++;
                 continue;
             }
-            try {
-                Map<String, Object> updateRow = (Map<String, Object>) rowObject;
+            Map<String, Object> updateRow = (Map<String, Object>) rowObject;
 
-                Id opportunitySiteId = toId(updateRow.get('opportunitySiteId'));
-                Id resolvedSiteId = toId(updateRow.get('siteId'));
-                if (resolvedSiteId == null && opportunitySiteId != null) {
-                    resolvedSiteId = siteIdByOpportunitySiteId.get(opportunitySiteId);
-                }
-
-                if (resolvedSiteId == null) {
-                    rowNumber++;
-                    continue;
-                }
-
-                // Reject any record that does not belong to the current opportunity so
-                // the flow cannot be used to update unrelated sites.
-                if (!allowedSiteIds.contains(resolvedSiteId)) {
-                    throw new SiteCameraUpdateException(
-                        'Row ' + String.valueOf(rowNumber) + ': submitted site is not related to this opportunity.'
-                    );
-                }
-
-                Site__c siteRecord = new Site__c(
-                    Id = resolvedSiteId,
-                    Number_of_Cameras__c = toDecimal(updateRow.get('totalCamera')),
-                    Point_of_Sale_System__c = toStringValue(updateRow.get('pointOfSaleSystem')),
-                    NVR_DVR_Make__c = toStringValue(updateRow.get('cameraMake')),
-                    NVR_DVR_Model__c = toStringValue(updateRow.get('cameraModel')),
-                    Camera_Make__c = toStringValue(updateRow.get('cameraMakeCustom')),
-                    Camera_Model__c = toStringValue(updateRow.get('cameraModelCustom')),
-                    Data_integrations_required_other__c = toStringValue(updateRow.get('dataIntegrationsRequiredOther')),
-                    Shipping_Address__Street__s = toStringValue(updateRow.get('shippingAddressStreet')),
-                    Shipping_Address__City__s = toStringValue(updateRow.get('shippingAddressCity')),
-                    Shipping_Address__StateCode__s = toStringValue(updateRow.get('shippingAddressStateCode')),
-                    Shipping_Address__PostalCode__s = toStringValue(updateRow.get('shippingAddressPostalCode')),
-                    Shipping_Address__CountryCode__s = toStringValue(updateRow.get('shippingAddressCountryCode')),
-                    Who_is_Installing__c = toStringValue(updateRow.get('whoIsInstalling')),
-                    Additional_billing_notes__c = toStringValue(updateRow.get('additionalBillingNotes')),
-                    NVR_DVR_Username__c = toStringValue(updateRow.get('nvrDvrUsername')),
-                    NVR_DVR_Password__c = toStringValue(updateRow.get('nvrDvrPassword')),
-                    NVR_DVR_Record_In_Parallel_With_SRD__c = toBooleanValue(updateRow.get('nvrDvrRecordInParallelWithSrd')),
-                    NVR_DVR_Required_as_POE__c = toBooleanValue(updateRow.get('nvrDvrRequiredAsPoe')),
-                    Permission_to_Reset_NVR_and_Cameras__c = toBooleanValue(updateRow.get('permissionToResetNvrAndCameras')),
-                    Headset_Audio_Type__c = toStringValue(updateRow.get('headsetAudioType')),
-                    HME_Type__c = toStringValue(updateRow.get('hmeType')),
-                    HME_Username__c = toStringValue(updateRow.get('hmeUsername')),
-                    HME_Password__c = toStringValue(updateRow.get('hmePassword')),
-                    Zoom_IP__c = toStringValue(updateRow.get('zoomIp')),
-                    Site_Address__Street__s = toStringValue(updateRow.get('siteAddressStreet')),
-                    Site_Address__City__s = toStringValue(updateRow.get('siteAddressCity')),
-                    Site_Address__StateCode__s = toStringValue(updateRow.get('siteAddressStateCode')),
-                    Site_Address__PostalCode__s = toStringValue(updateRow.get('siteAddressPostalCode')),
-                    Site_Address__CountryCode__s = toStringValue(updateRow.get('siteAddressCountryCode')),
-                    Site_Open_Date__c = toDateValue(updateRow.get('siteOpenDate')),
-                    Shipping_Contact__c = toId(updateRow.get('shippingContactId')),
-                    Install_Contact__c = toId(updateRow.get('installContactId')),
-                    Data_Contact__c = toId(updateRow.get('dataContactId')),
-                    Billing_Contact__c = toId(updateRow.get('billingContactId')),
-                    Account_Administrator__c = toId(updateRow.get('accountAdministratorContactId'))
-                );
-                sitesToUpdate.add(siteRecord);
-
-                if (opportunitySiteId != null) {
-                    opportunitySitesToUpdate.add(new Opportunity_Site__c(
-                        Id = opportunitySiteId,
-                        Audio_Type_s_Required__c = toStringValue(updateRow.get('audioTypesRequired'))
-                    ));
-                }
-            } catch (SiteCameraUpdateException rowHandledException) {
-                throw rowHandledException;
-            } catch (Exception rowException) {
-                throw new SiteCameraUpdateException(
-                    'Row ' + String.valueOf(rowNumber) + ': ' + rowException.getMessage()
-                );
+            Id opportunitySiteId = toId(updateRow.get('opportunitySiteId'));
+            Id resolvedSiteId = toId(updateRow.get('siteId'));
+            if (resolvedSiteId == null && opportunitySiteId != null) {
+                resolvedSiteId = siteIdByOpportunitySiteId.get(opportunitySiteId);
             }
-            rowNumber++;
+
+            if (resolvedSiteId == null) {
+                continue;
+            }
+
+            // Reject any record that does not belong to the current opportunity so
+            // the flow cannot be used to update unrelated sites.
+            if (!allowedSiteIds.contains(resolvedSiteId)) {
+                throw new AuraHandledException('One or more submitted sites are not related to this opportunity.');
+            }
+
+            Site__c siteRecord = new Site__c(Id = resolvedSiteId);
+            
+            if (updateRow.containsKey('totalCamera')) {
+                siteRecord.Number_of_Cameras__c = toDecimal(updateRow.get('totalCamera'));
+            }
+            if (updateRow.containsKey('pointOfSaleSystem')) {
+                siteRecord.Point_of_Sale_System__c = toStringValue(updateRow.get('pointOfSaleSystem'));
+            }
+            if (updateRow.containsKey('cameraMake')) {
+                siteRecord.NVR_DVR_Make__c = toStringValue(updateRow.get('cameraMake'));
+            }
+            if (updateRow.containsKey('cameraModel')) {
+                siteRecord.NVR_DVR_Model__c = toStringValue(updateRow.get('cameraModel'));
+            }
+            if (updateRow.containsKey('cameraMakeCustom')) {
+                siteRecord.Camera_Make__c = toStringValue(updateRow.get('cameraMakeCustom'));
+            }
+            if (updateRow.containsKey('cameraModelCustom')) {
+                siteRecord.Camera_Model__c = toStringValue(updateRow.get('cameraModelCustom'));
+            }
+            if (updateRow.containsKey('dataIntegrationsRequiredOther')) {
+                siteRecord.Data_integrations_required_other__c = toStringValue(updateRow.get('dataIntegrationsRequiredOther'));
+            }
+            if (updateRow.containsKey('shippingAddressStreet')) {
+                siteRecord.Shipping_Address__Street__s = toStringValue(updateRow.get('shippingAddressStreet'));
+            }
+            if (updateRow.containsKey('shippingAddressCity')) {
+                siteRecord.Shipping_Address__City__s = toStringValue(updateRow.get('shippingAddressCity'));
+            }
+            if (updateRow.containsKey('shippingAddressStateCode')) {
+                siteRecord.Shipping_Address__StateCode__s = toStringValue(updateRow.get('shippingAddressStateCode'));
+            }
+            if (updateRow.containsKey('shippingAddressPostalCode')) {
+                siteRecord.Shipping_Address__PostalCode__s = toStringValue(updateRow.get('shippingAddressPostalCode'));
+            }
+            if (updateRow.containsKey('shippingAddressCountryCode')) {
+                siteRecord.Shipping_Address__CountryCode__s = toStringValue(updateRow.get('shippingAddressCountryCode'));
+            }
+            if (updateRow.containsKey('whoIsInstalling')) {
+                siteRecord.Who_is_Installing__c = toStringValue(updateRow.get('whoIsInstalling'));
+            }
+            if (updateRow.containsKey('additionalBillingNotes')) {
+                siteRecord.Additional_billing_notes__c = toStringValue(updateRow.get('additionalBillingNotes'));
+            }
+            if (updateRow.containsKey('nvrDvrUsername')) {
+                siteRecord.NVR_DVR_Username__c = toStringValue(updateRow.get('nvrDvrUsername'));
+            }
+            if (updateRow.containsKey('nvrDvrPassword')) {
+                siteRecord.NVR_DVR_Password__c = toStringValue(updateRow.get('nvrDvrPassword'));
+            }
+            if (updateRow.containsKey('nvrDvrRecordInParallelWithSrd')) {
+                siteRecord.NVR_DVR_Record_In_Parallel_With_SRD__c = toBooleanValue(updateRow.get('nvrDvrRecordInParallelWithSrd'));
+            }
+            if (updateRow.containsKey('nvrDvrRequiredAsPoe')) {
+                siteRecord.NVR_DVR_Required_as_POE__c = toBooleanValue(updateRow.get('nvrDvrRequiredAsPoe'));
+            }
+            if (updateRow.containsKey('permissionToResetNvrAndCameras')) {
+                siteRecord.Permission_to_Reset_NVR_and_Cameras__c = toBooleanValue(updateRow.get('permissionToResetNvrAndCameras'));
+            }
+            if (updateRow.containsKey('headsetAudioType')) {
+                siteRecord.Headset_Audio_Type__c = toStringValue(updateRow.get('headsetAudioType'));
+            }
+            if (updateRow.containsKey('hmeType')) {
+                siteRecord.HME_Type__c = toStringValue(updateRow.get('hmeType'));
+            }
+            if (updateRow.containsKey('hmeUsername')) {
+                siteRecord.HME_Username__c = toStringValue(updateRow.get('hmeUsername'));
+            }
+            if (updateRow.containsKey('hmePassword')) {
+                siteRecord.HME_Password__c = toStringValue(updateRow.get('hmePassword'));
+            }
+            if (updateRow.containsKey('zoomIp')) {
+                siteRecord.Zoom_IP__c = toStringValue(updateRow.get('zoomIp'));
+            }
+            if (updateRow.containsKey('siteAddressStreet')) {
+                siteRecord.Site_Address__Street__s = toStringValue(updateRow.get('siteAddressStreet'));
+            }
+            if (updateRow.containsKey('siteAddressCity')) {
+                siteRecord.Site_Address__City__s = toStringValue(updateRow.get('siteAddressCity'));
+            }
+            if (updateRow.containsKey('siteAddressStateCode')) {
+                siteRecord.Site_Address__StateCode__s = toStringValue(updateRow.get('siteAddressStateCode'));
+            }
+            if (updateRow.containsKey('siteAddressPostalCode')) {
+                siteRecord.Site_Address__PostalCode__s = toStringValue(updateRow.get('siteAddressPostalCode'));
+            }
+            if (updateRow.containsKey('siteAddressCountryCode')) {
+                siteRecord.Site_Address__CountryCode__s = toStringValue(updateRow.get('siteAddressCountryCode'));
+            }
+            if (updateRow.containsKey('siteOpenDate')) {
+                siteRecord.Site_Open_Date__c = toDateValue(updateRow.get('siteOpenDate'));
+            }
+            if (updateRow.containsKey('shippingContactId')) {
+                siteRecord.Shipping_Contact__c = toId(updateRow.get('shippingContactId'));
+            }
+            if (updateRow.containsKey('installContactId')) {
+                siteRecord.Install_Contact__c = toId(updateRow.get('installContactId'));
+            }
+            if (updateRow.containsKey('dataContactId')) {
+                siteRecord.Data_Contact__c = toId(updateRow.get('dataContactId'));
+            }
+            if (updateRow.containsKey('billingContactId')) {
+                siteRecord.Billing_Contact__c = toId(updateRow.get('billingContactId'));
+            }
+            if (updateRow.containsKey('accountAdministratorContactId')) {
+                siteRecord.Account_Administrator__c = toId(updateRow.get('accountAdministratorContactId'));
+            }
+            
+            sitesToUpdate.add(siteRecord);
+
+            if (opportunitySiteId != null && updateRow.containsKey('audioTypesRequired')) {
+                opportunitySitesToUpdate.add(new Opportunity_Site__c(
+                    Id = opportunitySiteId,
+                    Audio_Type_s_Required__c = toStringValue(updateRow.get('audioTypesRequired'))
+                ));
+            }
         }
 
         if (!sitesToUpdate.isEmpty()) {
-            Database.SaveResult[] siteSaveResults = Database.update(sitesToUpdate, false);
-            // Return all save failures together instead of failing fast on the first row.
-            List<String> saveErrors = collectSaveErrors(siteSaveResults, 'Site');
-            if (!saveErrors.isEmpty()) {
-                throw new SiteCameraUpdateException('Failed to update site camera data:\n- ' + String.join(saveErrors, '\n- '));
-            }
+            update sitesToUpdate;
         }
         if (!opportunitySitesToUpdate.isEmpty()) {
-            Database.SaveResult[] opportunitySiteSaveResults = Database.update(opportunitySitesToUpdate, false);
-            List<String> saveErrors = collectSaveErrors(opportunitySiteSaveResults, 'Opportunity Site');
-            if (!saveErrors.isEmpty()) {
-                throw new SiteCameraUpdateException('Failed to update opportunity site data:\n- ' + String.join(saveErrors, '\n- '));
-            }
+            update opportunitySitesToUpdate;
         }
 
         result.updatedCount = sitesToUpdate.size();
-
-        if (result.updatedCount > 0) {
-            notifyOwnerIfExternalUser(request.opportunityId, result.updatedCount);
-        }
-
         return result;
-    }
-
-    private static void notifyOwnerIfExternalUser(Id opportunityId, Integer updatedCount) {
-        if (UserInfo.getUserType() == 'Standard') {
-            return;
-        }
-        String submitterName = UserInfo.getFirstName() + ' ' + UserInfo.getLastName();
-        sendOwnerNotificationAsync(opportunityId, updatedCount, submitterName);
-    }
-
-    @future
-    private static void sendOwnerNotificationAsync(Id opportunityId, Integer updatedCount, String submitterName) {
-        List<Opportunity> opps = [
-            SELECT Name, Owner.Email
-            FROM Opportunity
-            WHERE Id = :opportunityId
-            LIMIT 1
-        ];
-        if (opps.isEmpty() || String.isBlank(opps[0].Owner.Email)) {
-            return;
-        }
-        Opportunity opp = opps[0];
-         List<Messaging.SendEmailResult> results = new  List<Messaging.SendEmailResult>();
-         System.debug(LoggingLevel.INFO, 'Email: ' + opp.Owner.Email );
-        String subject = 'Site details submitted for Opportunity ' + opp.Name;
-        String body = 'Site details have been submitted for Opportunity ' + opp.Name + '<br/>' +
-            'Updated Site Count: ' + String.valueOf(updatedCount) + '<br/>' +
-            'Submitted By: ' + submitterName + '<br/>' +
-            'Submitted At: ' + String.valueOf(Datetime.now());
-
-        Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
-        email.setToAddresses(new List<String>{ opp.Owner.Email });
-        email.setSubject(subject);
-        email.setHtmlBody(body);
-        email.setSaveAsActivity(false);
-        System.debug(LoggingLevel.INFO, 'body: ' + email );
-        results = Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ email });
-        for (Messaging.SendEmailResult r : results) {
-        if (!r.isSuccess()) {
-            System.debug('Error: ' + r.getErrors());
-        }
-        }
- //       Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ email });
     }
 
     private static String toStringValue(Object value) {
@@ -264,25 +245,7 @@ public with sharing class OpportunitySiteCameraUpdateAction {
         if (text == 'false' || text == '0' || text == 'no' || text == 'n') {
             return false;
         }
-        throw new SiteCameraUpdateException(
-            'Invalid boolean value "' + String.valueOf(value) + '" in submitted site update data.'
-        );
-    }
-
-    private static List<String> collectSaveErrors(Database.SaveResult[] saveResults, String recordTypeLabel) {
-        List<String> errors = new List<String>();
-        for (Integer index = 0; index < saveResults.size(); index++) {
-            if (saveResults[index].isSuccess()) {
-                continue;
-            }
-
-            for (Database.Error saveError : saveResults[index].getErrors()) {
-                errors.add(
-                    recordTypeLabel + ' row #' + String.valueOf(index + 1) + ': ' + saveError.getMessage()
-                );
-            }
-        }
-        return errors;
+        throw new AuraHandledException('Invalid boolean value in submitted site update data.');
     }
 
     public class Request {
@@ -297,8 +260,6 @@ public with sharing class OpportunitySiteCameraUpdateAction {
         @InvocableVariable
         public Integer updatedCount;
     }
-
-    public class SiteCameraUpdateException extends Exception {}
 
     public class RowUpdate {
         public Id opportunitySiteId;

@@ -1,4 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <types>
+        <members>customerportal</members>
+        <name>Network</name>
+    </types>
+
+    <types>
+        <members>customerportal</members>
+        <name>CustomSite</name>
+    </types>
+
+    <types>
+        <members>customerportal1</members>
+        <name>ExperienceBundle</name>
+    </types>
+
+    <types>
+        <members>customerportal1</members>
+        <name>SiteDotCom</name>
+    </types>
+
+    <!-- Shared Experience metadata required by customerportal -->
+    <types>
+        <members>site/solinkcustomer1</members>
+        <members>content/solink</members>
+        <name>DigitalExperienceBundle</name>
+    </types>
+
+    <types>
+        <members>solinkcustomer1</members>
+        <name>DigitalExperienceConfig</name>
+    </types>
+
+    <types>
+        <members>customerportal</members>
+        <name>ManagedTopics</name>
+    </types>
+
+    <types>
+        <members>SFDC_Default_Navigation_customerportal</members>
+        <name>NavigationMenu</name>
+    </types>
+
+    <types>
+        <members>cbcustomerportal</members>
+        <name>NetworkBranding</name>
+    </types>
+
+    <types>
+        <members>Default1</members>
+        <name>Audience</name>
+    </types>
+
+    <types>
+        <members>customerportal.Banned</members>
+        <name>KeywordList</name>
+    </types>
+
+    <types>
+        <members>customerportal.Block_banned_keywords</members>
+        <members>customerportal.Flag_banned</members>
+        <members>customerportal.Freeze_for_frequent_posting</members>
+        <members>customerportal.Replace_banned</members>
+        <members>customerportal.Review_the_first_post</members>
+        <name>ModerationRule</name>
+    </types>
+
+    <types>
+        <members>customerportal.Customer_Members</members>
+        <members>customerportal.Members_without_contribution</members>
+        <members>customerportal.Partner_and_Customer_members</members>
+        <name>UserCriteria</name>
+    </types>
+
+    <types>
+        <members>SolinkcustomerPortal</members>
+        <name>SharingSet</name>
+    </types>
+
+    <types>
+        <members>ASolinkCustomerPortalUser</members>
+        <members>SolinkCustomerPortalUser</members>
+        <members>customerportal Profile</members>
+        <name>Profile</name>
+    </types>
+
+    <types>
+        <members>SiteDetailsNotificationAccess</members>
+        <name>PermissionSet</name>
+    </types>
+
+    <types>
+        <members>SNA_ZZdfp_sf_default_cdn_customerportal1</members>
+        <members>SNA_NpTcp_sf_default_cdn_solinkcustomer1</members>
+        <name>StaticResource</name>
+    </types>
+
+    <types>
+        <members>SolinkCustomerPortalUserProfileName</members>
+        <name>CustomLabel</name>
+    </types>
+
     <version>66.0</version>
 </Package>
