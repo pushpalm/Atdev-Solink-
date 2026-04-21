@@ -124,7 +124,9 @@ public with sharing class OpportunitySiteCameraDataController {
             String.isBlank(email) ||
             String.isBlank(phone)
         ) {
-            throw new AuraHandledException('First Name, Last Name, Email, and Phone are required to create a contact.');
+            AuraHandledException e = new AuraHandledException('First Name, Last Name, Email, and Phone are required to create a contact.');
+            e.setMessage('First Name, Last Name, Email, and Phone are required to create a contact.');
+            throw e;
         }
 
         // Delegate the insert to a without-sharing helper so external users
@@ -142,6 +144,9 @@ public with sharing class OpportunitySiteCameraDataController {
     public static FieldConfig getEditableFieldConfig() {
         FieldConfig config = new FieldConfig();
         config.pointOfSaleSystemOptions = getPicklistOptions('Point_of_Sale_System__c');
+        config.cameraMakeOptions = getPicklistOptions('Camera_Make__c');
+        config.cameraModelOptionsByMake = getDependentPicklistOptions('Camera_Make__c', 'Camera_Model__c');
+        config.cameraTypeOptions = getPicklistOptions('Camera_Type__c');
         config.whoIsInstallingOptions = getPicklistOptions('Who_is_Installing__c');
         config.siteAddressStateCodeOptions = getPicklistOptions('Site_Address__StateCode__s');
         config.siteAddressCountryCodeOptions = getPicklistOptions('Site_Address__CountryCode__s');
@@ -163,6 +168,7 @@ public with sharing class OpportunitySiteCameraDataController {
         config.fieldLabels.cameraModel = getFieldLabel('Site__c', 'NVR_DVR_Model__c');
         config.fieldLabels.cameraMakeCustom = getFieldLabel('Site__c', 'Camera_Make__c');
         config.fieldLabels.cameraModelCustom = getFieldLabel('Site__c', 'Camera_Model__c');
+        config.fieldLabels.cameraType = getFieldLabel('Site__c', 'Camera_Type__c');
         config.fieldLabels.dataIntegrationsRequiredOther = getFieldLabel('Site__c', 'Data_integrations_required_other__c');
         config.fieldLabels.shippingAddressStreet = getFieldLabel('Site__c', 'Shipping_Address__Street__s');
         config.fieldLabels.shippingAddressCity = getFieldLabel('Site__c', 'Shipping_Address__City__s');
@@ -204,6 +210,7 @@ public with sharing class OpportunitySiteCameraDataController {
                 Site__r.NVR_DVR_Model__c,
                 Site__r.Camera_Make__c,
                 Site__r.Camera_Model__c,
+                Site__r.Camera_Type__c,
                 Site__r.Data_integrations_required_other__c,
                 Site__r.Shipping_Address__Street__s,
                 Site__r.Shipping_Address__City__s,
@@ -270,6 +277,7 @@ public with sharing class OpportunitySiteCameraDataController {
             row.cameraModel = opportunitySite.Site__r != null ? opportunitySite.Site__r.NVR_DVR_Model__c : null;
             row.cameraMakeCustom = opportunitySite.Site__r != null ? opportunitySite.Site__r.Camera_Make__c : null;
             row.cameraModelCustom = opportunitySite.Site__r != null ? opportunitySite.Site__r.Camera_Model__c : null;
+            row.cameraType = opportunitySite.Site__r != null ? opportunitySite.Site__r.Camera_Type__c : null;
             row.dataIntegrationsRequiredOther =
                 opportunitySite.Site__r != null ? opportunitySite.Site__r.Data_integrations_required_other__c : null;
             row.shippingAddressStreet = opportunitySite.Site__r != null ? opportunitySite.Site__r.Shipping_Address__Street__s : null;
@@ -449,7 +457,7 @@ public with sharing class OpportunitySiteCameraDataController {
 
         return parts.isEmpty() ? null : String.join(parts, ', ');
     }
-    // Added on April 17th Pushpi Mandal
+
     // Runs in system context so portal users can create the contact
     // as long as the target opportunity/account is valid.
     private without sharing class ContactCreationSystemService {
@@ -467,7 +475,9 @@ public with sharing class OpportunitySiteCameraDataController {
                 LIMIT 1
             ];
             if (targetOpportunity.AccountId == null) {
-                throw new AuraHandledException('The selected opportunity must have an account before creating contacts.');
+                AuraHandledException ex = new AuraHandledException('The selected opportunity must have an account before creating contacts.');
+                ex.setMessage('The selected opportunity must have an account before creating contacts.');
+                throw ex;
             }
 
             Contact newContact = new Contact(
@@ -483,9 +493,10 @@ public with sharing class OpportunitySiteCameraDataController {
 
             ContactOption option = new ContactOption();
             option.value = newContact.Id;
-            option.label = String.isBlank(newContact.Email)
-                ? newContact.Name
-                : newContact.Name + ' (' + newContact.Email + ')';
+            String fullName = firstName.trim() + ' ' + lastName.trim();
+            option.label = String.isBlank(email)
+                ? fullName
+                : fullName + ' (' + email.trim() + ')';
             return option;
         }
     }
@@ -504,6 +515,7 @@ public with sharing class OpportunitySiteCameraDataController {
         @AuraEnabled public String cameraModel;
         @AuraEnabled public String cameraMakeCustom;
         @AuraEnabled public String cameraModelCustom;
+        @AuraEnabled public String cameraType;
         @AuraEnabled public String dataIntegrationsRequiredOther;
         @AuraEnabled public String shippingAddressStreet;
         @AuraEnabled public String shippingAddressCity;
@@ -544,6 +556,9 @@ public with sharing class OpportunitySiteCameraDataController {
 
     public class FieldConfig {
         @AuraEnabled public List<PicklistOption> pointOfSaleSystemOptions = new List<PicklistOption>();
+        @AuraEnabled public List<PicklistOption> cameraMakeOptions = new List<PicklistOption>();
+        @AuraEnabled public Map<String, List<PicklistOption>> cameraModelOptionsByMake = new Map<String, List<PicklistOption>>();
+        @AuraEnabled public List<PicklistOption> cameraTypeOptions = new List<PicklistOption>();
         @AuraEnabled public List<PicklistOption> whoIsInstallingOptions = new List<PicklistOption>();
         @AuraEnabled public List<PicklistOption> siteAddressStateCodeOptions = new List<PicklistOption>();
         @AuraEnabled public List<PicklistOption> siteAddressCountryCodeOptions = new List<PicklistOption>();
@@ -568,6 +583,7 @@ public with sharing class OpportunitySiteCameraDataController {
         @AuraEnabled public String cameraModel;
         @AuraEnabled public String cameraMakeCustom;
         @AuraEnabled public String cameraModelCustom;
+        @AuraEnabled public String cameraType;
         @AuraEnabled public String dataIntegrationsRequiredOther;
         @AuraEnabled public String shippingAddressStreet;
         @AuraEnabled public String shippingAddressCity;
@@ -593,5 +609,67 @@ public with sharing class OpportunitySiteCameraDataController {
     public class ContactOption {
         @AuraEnabled public String label;
         @AuraEnabled public Id value;
+    }
+
+    private static Map<String, List<PicklistOption>> getDependentPicklistOptions(
+        String controllingField,
+        String dependentField
+    ) {
+        Map<String, List<PicklistOption>> result = new Map<String, List<PicklistOption>>();
+        Schema.DescribeFieldResult controllingDescribe = Site__c.SObjectType.getDescribe()
+            .fields.getMap().get(controllingField).getDescribe();
+        Schema.DescribeFieldResult dependentDescribe = Site__c.SObjectType.getDescribe()
+            .fields.getMap().get(dependentField).getDescribe();
+
+        List<Schema.PicklistEntry> controllingValues = controllingDescribe.getPicklistValues();
+        List<Schema.PicklistEntry> dependentValues = dependentDescribe.getPicklistValues();
+
+        // Build controlling value index
+        Map<String, Integer> controllingIndex = new Map<String, Integer>();
+        for (Integer i = 0; i < controllingValues.size(); i++) {
+            controllingIndex.put(controllingValues[i].getValue(), i);
+            result.put(controllingValues[i].getValue(), new List<PicklistOption>());
+        }
+
+        // Serialize dependent picklist entries to access the hidden validFor property
+        List<PicklistEntryWrapper> wrappedEntries = (List<PicklistEntryWrapper>) JSON.deserialize(
+            JSON.serialize(dependentValues),
+            List<PicklistEntryWrapper>.class
+        );
+
+        // Map dependent values to controlling values
+        for (PicklistEntryWrapper dep : wrappedEntries) {
+            if (!dep.active || String.isBlank(dep.validFor)) {
+                continue;
+            }
+            for (String ctrlValue : controllingIndex.keySet()) {
+                Integer idx = controllingIndex.get(ctrlValue);
+                if (isValidForIndex(dep.validFor, idx)) {
+                    PicklistOption opt = new PicklistOption();
+                    opt.label = dep.label;
+                    opt.value = dep.value;
+                    result.get(ctrlValue).add(opt);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static Boolean isValidForIndex(String validFor, Integer index) {
+        String base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+        Integer byteIndex = index / 6;
+        if (byteIndex >= validFor.length()) {
+            return false;
+        }
+        Integer bitIndex = 5 - Math.mod(index, 6);
+        Integer charValue = base64Chars.indexOf(validFor.substring(byteIndex, byteIndex + 1));
+        return ((charValue >> bitIndex) & 1) == 1;
+    }
+
+    private class PicklistEntryWrapper {
+        public String label;
+        public String value;
+        public Boolean active;
+        public String validFor;
     }
 }

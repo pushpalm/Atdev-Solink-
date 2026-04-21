@@ -167,24 +167,48 @@
                             ></lightning-input>
                         </div>
                         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
-                            <lightning-input
-                                type="text"
-                                label={row.fieldLabels.cameraMakeCustom}
-                                data-row-id={row.opportunitySiteId}
-                                data-field="cameraMakeCustom"
-                                value={row.cameraMakeCustom}
-                                onchange={handleFieldChange}
-                            ></lightning-input>
+                            <template if:true={row.hasCameraMakeOptions}>
+                                <lightning-combobox
+                                    label={row.fieldLabels.cameraMakeCustom}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="cameraMakeCustom"
+                                    value={row.cameraMakeCustom}
+                                    options={row.cameraMakeOptions}
+                                    onchange={handleFieldChange}
+                                ></lightning-combobox>
+                            </template>
+                            <template if:false={row.hasCameraMakeOptions}>
+                                <lightning-input
+                                    type="text"
+                                    label={row.fieldLabels.cameraMakeCustom}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="cameraMakeCustom"
+                                    value={row.cameraMakeCustom}
+                                    onchange={handleFieldChange}
+                                ></lightning-input>
+                            </template>
                         </div>
                         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
-                            <lightning-input
-                                type="text"
-                                label={row.fieldLabels.cameraModelCustom}
-                                data-row-id={row.opportunitySiteId}
-                                data-field="cameraModelCustom"
-                                value={row.cameraModelCustom}
-                                onchange={handleFieldChange}
-                            ></lightning-input>
+                            <template if:true={row.hasCameraModelCustomOptions}>
+                                <lightning-combobox
+                                    label={row.fieldLabels.cameraModelCustom}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="cameraModelCustom"
+                                    value={row.cameraModelCustom}
+                                    options={row.cameraModelCustomOptions}
+                                    onchange={handleFieldChange}
+                                ></lightning-combobox>
+                            </template>
+                            <template if:false={row.hasCameraModelCustomOptions}>
+                                <lightning-input
+                                    type="text"
+                                    label={row.fieldLabels.cameraModelCustom}
+                                    data-row-id={row.opportunitySiteId}
+                                    data-field="cameraModelCustom"
+                                    value={row.cameraModelCustom}
+                                    onchange={handleFieldChange}
+                                ></lightning-input>
+                            </template>
                         </div>
                         <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-3">
                             <lightning-input

@@ -9,6 +9,8 @@ import createContactForOpportunity from '@salesforce/apex/OpportunitySiteCameraD
 
 const DEFAULT_FIELD_CONFIG = {
     pointOfSaleSystemOptions: [],
+    cameraMakeOptions: [],
+    cameraModelOptionsByCameraMake: {},
     whoIsInstallingOptions: [],
     siteAddressStateCodeOptions: [],
     siteAddressStateOptionsByCountry: {},
@@ -92,7 +94,18 @@ const REQUIRED_FIELDS = [
     { key: 'billingContactId', label: 'Billing Contact' },
     { key: 'accountAdministratorContactId', label: 'Account Administrator' },
     // Conditional: only required when NVR DVR Required as POE is checked
+    //  // Conditional: only required when NVR DVR Required as POE is checked
     {
+        key: 'cameraMake',
+        label: 'NVR DVR Make',
+        condition: (row) => row.nvrDvrRequiredAsPoe === true
+    },
+    {
+        key: 'cameraModel',
+        label: 'NVR DVR Model',
+        condition: (row) => row.nvrDvrRequiredAsPoe === true
+    },
+        {
         key: 'nvrDvrUsername',
         label: 'NVR DVR Username',
         condition: (row) => row.nvrDvrRequiredAsPoe === true
@@ -197,7 +210,18 @@ export default class OpportunitySiteCameraTable extends LightningElement {
             const banner = this.template.querySelector('[data-id="validation-banner"]');
             if (banner) {
                 banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+// scrollIntoView only scrolls the nearest scrollable ancestor.
+                // On full-page layouts (e.g. customer portal) the main viewport
+                // may not scroll. Use getBoundingClientRect + window.scrollTo
+                // as a fallback to ensure the banner is visible.
+                requestAnimationFrame(() => {
+                    const rect = banner.getBoundingClientRect();
+                    if (rect.top < 0 || rect.top > window.innerHeight * 0.3) {
+                        const absoluteTop = window.pageYOffset + rect.top;
+                        window.scrollTo({ top: Math.max(0, absoluteTop - 20), behavior: 'smooth' });
+                    }
+                });
+                        }
         }
     }
 
@@ -217,9 +241,11 @@ export default class OpportunitySiteCameraTable extends LightningElement {
         }
 
         const stateOptionsByCountry = this.buildStateOptionsByCountry(data.picklistFieldValues);
+        const cameraModelOptionsByCameraMake = this.buildCameraModelOptionsByCameraMake(data.picklistFieldValues);
         this.fieldConfig = {
             ...this.fieldConfig,
-            siteAddressStateOptionsByCountry: stateOptionsByCountry
+            siteAddressStateOptionsByCountry: stateOptionsByCountry,
+            cameraModelOptionsByCameraMake: cameraModelOptionsByCameraMake
         };
         this.rows = this.buildRows();
     }
@@ -294,6 +320,8 @@ export default class OpportunitySiteCameraTable extends LightningElement {
 
         this.fieldConfig = {
             pointOfSaleSystemOptions: data.pointOfSaleSystemOptions || [],
+            cameraMakeOptions: data.cameraMakeOptions || [],
+            cameraModelOptionsByCameraMake: this.fieldConfig.cameraModelOptionsByCameraMake || {},
             whoIsInstallingOptions: data.whoIsInstallingOptions || [],
             siteAddressStateCodeOptions: data.siteAddressStateCodeOptions || [],
             siteAddressStateOptionsByCountry: this.fieldConfig.siteAddressStateOptionsByCountry || {},
@@ -376,12 +404,19 @@ export default class OpportunitySiteCameraTable extends LightningElement {
                 billingContactName: row.billingContactName || '',
                 accountAdministratorContactId: row.accountAdministratorContactId || '',
                 accountAdministratorContactName: row.accountAdministratorContactName || ''
+                
             };
 
             const pointOfSaleSystemOptions = this.mergeOptions(
                 this.fieldConfig.pointOfSaleSystemOptions,
                 normalizedRow.pointOfSaleSystem
             );
+            const cameraMakeOptions = this.mergeOptions(
+                this.fieldConfig.cameraMakeOptions,
+                normalizedRow.cameraMakeCustom
+            );
+            const baseCameraModelOptions = this.getCameraModelOptionsForCameraMake(normalizedRow.cameraMakeCustom);
+            const cameraModelCustomOptions = this.mergeOptions(baseCameraModelOptions, normalizedRow.cameraModelCustom);
             const baseStateOptions = this.getStateOptionsForCountry(normalizedRow.siteAddressCountryCode);
             const siteAddressStateCodeOptions = this.mergeOptions(baseStateOptions, normalizedRow.siteAddressStateCode);
             const siteAddressCountryCodeOptions = this.mergeOptions(
@@ -416,6 +451,10 @@ export default class OpportunitySiteCameraTable extends LightningElement {
                 showHeadsetDependentFields: !!(normalizedRow.headsetAudioType || '').trim(),
                 pointOfSaleSystemOptions,
                 hasPointOfSaleSystemOptions: pointOfSaleSystemOptions.length > 0,
+                cameraMakeOptions,
+                hasCameraMakeOptions: cameraMakeOptions.length > 0,
+                cameraModelCustomOptions,
+                hasCameraModelCustomOptions: cameraModelCustomOptions.length > 0,
                 siteAddressStateCodeOptions,
                 hasSiteAddressStateCodeOptions: siteAddressStateCodeOptions.length > 0,
                 siteAddressCountryCodeOptions,
@@ -453,6 +492,15 @@ export default class OpportunitySiteCameraTable extends LightningElement {
         return optionsByCountry[countryCode] || [];
     }
 
+    getCameraModelOptionsForCameraMake(cameraMake) {
+        if (!cameraMake) {
+            return [];
+        }
+
+        const optionsByCameraMake = this.fieldConfig.cameraModelOptionsByCameraMake || {};
+        return optionsByCameraMake[cameraMake] || [];
+    }
+
     buildStateOptionsByCountry(picklistFieldValues = {}) {
         const countryField = picklistFieldValues.Site_Address__CountryCode__s;
         const stateField = picklistFieldValues.Site_Address__StateCode__s;
@@ -478,6 +526,33 @@ export default class OpportunitySiteCameraTable extends LightningElement {
         });
 
         return optionsByCountry;
+    }
+
+    buildCameraModelOptionsByCameraMake(picklistFieldValues = {}) {
+        const cameraMakeField = picklistFieldValues.Camera_Make__c;
+        const cameraModelField = picklistFieldValues.Camera_Model__c;
+        if (!cameraMakeField || !cameraModelField) {
+            return {};
+        }
+
+        const cameraMakeOptions = cameraMakeField.values || [];
+        const cameraModelOptions = cameraModelField.values || [];
+        const controllerValues = cameraModelField.controllerValues || {};
+        const optionsByCameraMake = {};
+
+        cameraMakeOptions.forEach((cameraMakeOption) => {
+            const controllingIndex = controllerValues[cameraMakeOption.value];
+            if (controllingIndex === undefined) {
+                optionsByCameraMake[cameraMakeOption.value] = [];
+                return;
+            }
+
+            optionsByCameraMake[cameraMakeOption.value] = cameraModelOptions
+                .filter((cameraModelOption) => (cameraModelOption.validFor || []).includes(controllingIndex))
+                .map((cameraModelOption) => ({ label: cameraModelOption.label, value: cameraModelOption.value }));
+        });
+
+        return optionsByCameraMake;
     }
 
     handleFieldChange(event) {
@@ -521,6 +596,24 @@ export default class OpportunitySiteCameraTable extends LightningElement {
 
         if (fieldName === 'totalCamera' && fieldValue !== '' && fieldValue !== null && fieldValue !== undefined) {
             fieldValue = Number(fieldValue);
+        }
+
+        if (fieldName === 'cameraMakeCustom') {
+            const validModelOptions = this.getCameraModelOptionsForCameraMake(fieldValue);
+            const validModelValues = validModelOptions.map((opt) => opt.value);
+            this.rawRows = this.rawRows.map((row) => {
+                if (row.opportunitySiteId !== rowId) {
+                    return row;
+                }
+                const updatedRow = { ...row, cameraMakeCustom: fieldValue };
+                if (row.cameraModelCustom && !validModelValues.includes(row.cameraModelCustom)) {
+                    updatedRow.cameraModelCustom = '';
+                }
+                return updatedRow;
+            });
+            this.rows = this.buildRows();
+            this.publishRows();
+            return;
         }
 
         this.rawRows = this.rawRows.map((row) => {
